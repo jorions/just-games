@@ -1,0 +1,6 @@
+/node_modules
+/public/*bundle.js
+/public/bundle.js.map
+/public/index.html
+/public/main*.css
+.env

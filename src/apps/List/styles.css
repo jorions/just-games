@@ -1,0 +1,84 @@
+@media not all and (max-width: 480px) {
+  .createGame {
+    margin-top: 3rem;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  .createGame > div {
+    display: inline-block;
+  }
+  .createGame > div:first-child {
+    width: 60%;
+    padding-right: 2rem;
+  }
+  .createGame > div:nth-child(2) {
+    width: 40%;
+  }
+  .createGame > div:nth-child(3) {
+    width: 60%;
+    margin-top: 1rem;
+    padding-right: 2rem;
+  }
+  .createGame > div:nth-child(3) > div {
+    width: 100%;
+  }
+  .createGame > div:last-child {
+    width: 40%;
+    margin-top: 1rem;
+    vertical-align: bottom;
+  }
+}
+@media (max-width: 480px) {
+  .createGame {
+    padding: 2rem;
+  }
+  .createGame > div {
+    margin-top: 1rem;
+  }
+  .createGame > div:last-child {
+    margin-top: 2rem;
+  }
+}
+
+.submitCreateGame {
+  color: white !important;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+.list > div {
+  margin: 1rem;
+}
+@media (max-width: 480px) {
+  .list {
+    background-color: var(--light-gray);
+  }
+}
+
+.card {
+  padding: .5rem !important;
+}
+@media not all and (max-width: 480px) {
+  .card {
+    width: 25rem !important;
+  }
+}
+@media (max-width: 480px) {
+  .card {
+    width: 100%;
+  }
+}
+
+.passwordNote {
+  padding-top: .25rem;
+  width: 100%;
+}
+.passwordNote svg {
+  float: right;
+  margin-top: -.25rem;
+}

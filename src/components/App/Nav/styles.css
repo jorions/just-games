@@ -1,0 +1,85 @@
+:root {
+  --nav-mobile-height: 3.5rem;
+  --nav-non-mobile-width: 8rem;
+}
+
+.nav {
+  background-color: var(--green);
+  position: fixed;
+  z-index: 2;
+  transition: width var(--fast);
+}
+@media not all and (max-width: 840px) {
+  .nav {
+    display: inline-block;
+    width: var(--nav-non-mobile-width);
+    height: 100vh;
+  }
+  .nav.collapsed {
+    width: 0px;
+  }
+}
+@media (max-width: 840px) {
+  .nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100vw;
+    height: var(--nav-mobile-height);
+    bottom: 0;
+  }
+}
+
+.nav a {
+  color: white;
+  transition: var(--fast);
+  border-radius: 0;
+}
+.nav a:hover {
+  background-color: silver;
+  transition: var(--fast);
+}
+.nav a.active {
+  color: gray;
+  background-color: white;
+}
+@media not all and (max-width: 840px) {
+  .nav a {
+    display: block;
+    padding: 1rem;
+  }
+  .label {
+    padding-left: .25rem;
+  }
+  .logOut {
+    position: absolute !important;
+    bottom: 0;
+    right: 0;
+  }
+}
+@media (max-width: 840px) {
+  .nav a {
+    height: 100%;
+    padding: .5rem 0rem 1.25rem;
+    /* Make all links equal width, and equally grow to fill space */
+    flex-grow: 1;
+    flex-basis: 0;
+    /* Center content inside */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .label {
+    position: absolute;
+    bottom: .25rem;
+    font-size: .875rem;
+    margin-bottom: -.125rem;
+  }
+  .mobileIcon {
+    font-size: 1.5em;
+  }
+}
+
+.cah {
+  background-color: black;
+}

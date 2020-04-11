@@ -1,0 +1,115 @@
+:root {
+  --fast: .25s;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+@media not all and (max-width: 480px) {
+  .hide-on-desktop {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+
+
+/* Position */
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute !important;
+}
+.bottom-0 {
+  bottom: 0;
+}
+
+
+/* Display */
+.inline {
+  display: inline;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.flex {
+  display: flex;
+}
+.flex-centered {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.flex-centered--no-wrap {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.flex-vertical-centered {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+
+/* Floats */
+.right {
+  float: right !important;
+}
+
+.left {
+  float: left !important;
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+/* Other */
+.center {
+  text-align: center !important;
+}
+
+li.hide-bullets {
+  list-style: none;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.lightweight {
+  font-weight: 300;
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scroll-y {
+  overflow-y: scroll;
+}
+
+.no-radius {
+  border-radius: 0px !important;
+}

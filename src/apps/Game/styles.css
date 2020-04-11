@@ -1,0 +1,49 @@
+.noButton,
+.goBackButton {
+  position: absolute !important;
+}
+.noButton {
+  left: 0;
+}
+.goBackButton {
+  left: 1rem;
+}
+
+.headerSpacer {
+  width: 70px;
+  height: var(--header-height);
+  vertical-align: top;
+}
+
+.header {
+  width: calc(100% - 140px);
+}
+
+.headerSpacer,
+.header,
+.deleteContainer {
+  display: inline-block;
+}
+.deleteContainer {
+  width: 70px;
+  height: var(--header-height);
+  vertical-align: top;
+}
+
+.delete {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cah .headerSpacer {
+  background-color: black;
+  border-left: 1px solid white;
+}
+.cah .deleteContainer {
+  background-color: black;
+}
+.cah .deleteIcon {
+  color: white;
+}

@@ -1,0 +1,78 @@
+:root {
+  --listing-mobile-height: 6rem;
+}
+
+.card {
+  cursor: pointer;
+  border-radius: 10px !important;
+  height: 15rem;
+  width: 10rem;
+  transition: transform var(--fast);
+}
+.card:hover {
+  transform: scale(1.1);
+  transition: transform var(--fast);
+}
+@media not all and (max-width: 480px) {
+  .card:not(.small) {
+    margin: 1.5rem .75rem 0;
+  }
+}
+@media (max-width: 480px) {
+  .card {
+    height: var(--listing-mobile-height);
+    width: 100%;
+    margin: .5rem;
+  }
+}
+.card > span {
+  display: inline-block;
+  height: 100%;
+  vertical-align: top;
+}
+.small {
+  display: inline-block;
+  height: 10rem;
+  width: 6.666rem;
+  margin-left: 1rem;
+}
+
+.text {
+  line-height: 23px !important;
+  border-radius: 10px !important;
+  height: 15rem;
+  width: 10rem;
+  padding: .75rem;
+}
+.text.long {
+  font-size: 12px;
+  line-height: 18px !important;
+}
+.small .text {
+  font-size: 14px;
+  height: 10rem;
+  width: 6.666rem;
+  line-height: 17px !important;
+  padding: .5rem;
+  word-wrap: break-word;
+  overflow-y: scroll;
+}
+
+.focusHighlight {
+  background-color: var(--blue);
+  position: relative;
+}
+
+.selected {
+  color: var(--green) !important;
+}
+
+.count {
+  width: 100%;
+  position: absolute;
+  text-align: center;
+  bottom: 10%;
+  opacity: 0.5;
+  color: var(--green);
+  font-size: 20px;
+}

@@ -1,0 +1,34 @@
+:root {
+  --green: #15d8b1;
+  --blue: #00b0ff;
+  --dark-blue: #0081cb;
+  /* TODO Decide if we want this blue color */
+  /* --blue: #00b8d4; */
+  --lightest-gray: #fafafa;
+  --light-gray: #f2f2f2;
+  --med-gray: rgba(0, 0, 0, 0.42);
+  --red: #ff1744;
+}
+
+.green {
+  color: var(--green) !important;
+}
+
+.blue {
+  color: var(--blue) !important;
+}
+.bg-blue {
+  background-color: var(--blue) !important;
+}
+
+.white {
+  color: white !important;
+}
+
+.bg-lightest-gray {
+  background-color: var(--lightest-gray);
+}
+
+.med-gray {
+  color: var(--med-gray);
+}

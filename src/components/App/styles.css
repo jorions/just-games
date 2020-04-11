@@ -1,0 +1,25 @@
+.appContainer {
+  vertical-align: top;
+  overflow: scroll;
+  display: inline-block;
+}
+@media not all and (max-width: 840px) {
+  .appContainer {
+    width: calc(100vw - var(--nav-non-mobile-width));
+    margin-left: var(--nav-non-mobile-width);
+    height: 100vh;
+  }
+}
+@media (max-width: 840px) {
+  .appContainer {
+    width: 100vw;
+    padding-bottom: var(--nav-mobile-height);
+  }
+}
+*:not(.appContainer) {
+  box-sizing: border-box;
+}
+
+.cah {
+  background-color: var(--light-gray);
+}

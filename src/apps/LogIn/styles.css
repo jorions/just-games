@@ -1,0 +1,21 @@
+@media not all and (max-width: 480px) {
+  .container {
+    margin-top: 8rem;
+  }
+  .form {
+    width: 300px;
+  }
+}
+@media (max-height: 480px) {
+  .container {
+    margin-top: 1rem;
+  }
+}
+@media (max-width: 480px) {
+  .container {
+    margin-top: 2rem;
+  }
+  .form {
+    width: 100%;
+  }
+}

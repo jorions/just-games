@@ -1,0 +1,24 @@
+@media not all and (max-width: 480px) {
+  .errorIcon {
+    font-size: 120px !important;
+  }
+}
+@media (max-width: 480px) {
+  .errorIcon {
+    font-size: 100px !important;
+  }
+}
+
+.request {
+  margin-top: 5rem !important;
+  margin-bottom: 2rem !important;
+}
+
+.errorStack {
+  display: inline-block;
+  text-align: left;
+  font-size: 14px;
+  border: none;
+  max-height: 400px;
+  overflow: scroll;
+}

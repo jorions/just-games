@@ -1,0 +1,98 @@
+.status {
+  background-color: var(--blue);
+  color: white;
+  text-align: center;
+  padding: 10px;
+  transition: background-color var(--fast);
+}
+.status.ready {
+  background-color: var(--green);
+  padding: 6px;
+}
+
+.blackCard {
+  background-color: black !important;
+  color: white !important;
+  width: 15rem;
+  height: 24rem;
+  border-radius: 15px !important;
+  padding: 1.5rem;
+  margin: 1rem 1rem 0;
+  position: relative;
+  display: inline-block;
+}
+
+.pick {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+}
+.pick > div {
+  display: inline-block;
+}
+.pick > div:last-child {
+  margin-left: 5px;
+  border: 1px solid white;
+  border-radius: 50%;
+  text-align: center;
+  width: 25px;
+  height: 25px;
+  color: black;
+  background-color: white;
+}
+
+.playedCards {
+  display: inline-block;
+  width: calc(100% - 17rem); /* 17 rem is total width of .blackCard */
+  height: 24rem; /* height of .blackCard */
+  vertical-align: top;
+  overflow-y: scroll;
+  padding-top: 1rem;
+}
+.playedCards > div {
+  display: inline-block;
+  margin-right: 2rem;
+  margin-bottom: 2rem;
+}
+.playedCards > button {
+  padding-right: 1.5rem;
+  vertical-align: top;
+  margin-bottom: 1rem;
+  text-align: left;
+  border-radius: 1rem;
+}
+.playedCards > .winner {
+  background-color: var(--green) !important;
+}
+
+
+.players {
+  display: flex;
+  margin-left: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.players > div {
+  width: 9rem;
+  margin: 5px 0;
+  padding-right: 5px;
+  border-left: 2px solid var(--blue);
+  padding-left: 1rem;
+}
+.players > div.czar {
+  border-left: 2px solid var(--green);
+}
+.players > div.inactive {
+  border-left: 2px solid var(--med-gray);
+}
+
+.player > * {
+  font-weight: 700 !important;
+}
+.inactive > * {
+  color: var(--med-gray) !important;
+}
+
+.yourCards {
+  margin-bottom: 1rem;
+}
