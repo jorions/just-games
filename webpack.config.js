@@ -54,6 +54,7 @@ module.exports = {
     host: '0.0.0.0',
     // Hide child entry point stats, removing the console msg  "Entrypoint undefined = index.html"
     stats: { children: false },
+    port: 5050,
   },
   module: {
     // Rules defining which files ("test:"/"exclude:") to use ("use:") certain code
@@ -139,45 +140,30 @@ module.exports = {
       {
         test: /\.css$/,
         exclude: [/node_modules/, /index.css/],
-        use: inDevMode
-          ? [
-              'style-loader',
-              {
-                loader: 'css-loader',
-                options: {
-                  importLoaders: 1,
-                  // Enable local scoping of css classes - this naming matches the
-                  // naming defined in the .babelrc. The .babelrc uses babel-plugin-react-css-modules
-                  // to enable the use of the styleName prop in components.
-                  modules: {
-                    localIdentName: '[name]_[local]_[hash:base64:5]',
-                  },
-                },
-              },
-              'postcss-loader',
-            ]
-          : [
-              {
+        use: [
+          inDevMode
+            ? 'style-loader'
+            : {
                 loader: MiniCssExtractPlugin.loader,
                 options: {
                   importLoaders: 1,
                   publicPath: path.resolve(__dirname, 'public'),
                 },
               },
-              {
-                loader: 'css-loader',
-                options: {
-                  importLoaders: 1,
-                  // Enable local scoping of css classes - this naming matches the
-                  // naming defined in the .babelrc. The .babelrc uses babel-plugin-react-css-modules
-                  // to enable the use of the styleName prop in components.
-                  modules: {
-                    localIdentName: '[name]_[local]_[hash:base64:5]',
-                  },
-                },
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              // Enable local scoping of css classes - this naming matches the
+              // naming defined in the .babelrc. The .babelrc uses babel-plugin-react-css-modules
+              // to enable the use of the styleName prop in components.
+              modules: {
+                localIdentName: '[name]_[local]_[hash:base64:5]',
               },
-              'postcss-loader',
-            ],
+            },
+          },
+          'postcss-loader',
+        ],
       },
       // Enables importing/requiring images directly in JS. For each imported file,
       // it emits a file in the output directory. As far as the browser can see,
