@@ -44,7 +44,7 @@ export const fetchGame = ({ id, password, onSuccess, isPoll = false }) => async 
   try {
     const {
       data: { game },
-    } = await axios.get(`${SERVER_URL}/games/${id}`, isPoll ? {} : { params: { password } }) // Send username on first fetch to add user to game
+    } = await axios.get(`${SERVER_URL}/api/games/${id}`, isPoll ? {} : { params: { password } }) // Send username on first fetch to add user to game
     if (onSuccess) onSuccess()
     dispatch(actions.fetchGameSuccess(formatGame(game, username)))
     poll = setTimeout(() => dispatch(fetchGame({ id, isPoll: true })), 2000)
@@ -72,7 +72,7 @@ export const deleteGame = id => async dispatch => {
   try {
     if (poll) stopPollingForGame()
     dispatch(actions.deleteGameStart())
-    await axios.delete(`${SERVER_URL}/games/${id}`)
+    await axios.delete(`${SERVER_URL}/api/games/${id}`)
     dispatch(actions.deleteGameSuccess())
   } catch (err) {
     dispatch(handleError(err, actions.deleteGameError))
@@ -88,7 +88,7 @@ export const submitAction = ({ id, action, data, onSuccess }) => async (dispatch
     dispatch(actions.submitActionLoading())
     const {
       data: { game },
-    } = await axios.post(`${SERVER_URL}/games/${id}/action`, {
+    } = await axios.post(`${SERVER_URL}/api/games/${id}/action`, {
       action,
       data,
     })

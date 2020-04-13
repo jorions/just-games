@@ -7,7 +7,7 @@ const store = require('../lib/store')
 
 const { parseAndRefreshAuth } = require('./middleware')
 
-const router = buildRouter('/games')
+const router = buildRouter('/api/games')
 
 /**
  * Responds

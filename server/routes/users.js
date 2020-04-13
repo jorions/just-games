@@ -6,7 +6,7 @@ const handleError = require('./handleError')
 const { users } = require('../lib/repo')
 const jwt = require('../lib/jwt')
 
-const router = buildRouter('/users')
+const router = buildRouter('/api/users')
 
 /**
  * Receives

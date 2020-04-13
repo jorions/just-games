@@ -14,7 +14,7 @@ const { SERVER_URL } = process.env
 export const submitLogIn = ({ username, password, isCreate }) => async dispatch => {
   dispatch(actions.logInStart())
   try {
-    await axios.post(`${SERVER_URL}/users/log-in`, { username, password, isCreate })
+    await axios.post(`${SERVER_URL}/api/users/log-in`, { username, password, isCreate })
     dispatch(userActions.logInSuccess(username))
   } catch (err) {
     dispatch(

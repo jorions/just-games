@@ -31,7 +31,7 @@ export const fetchGames = isPoll => async (dispatch, getState) => {
   try {
     const {
       data: { games },
-    } = await axios.get(`${SERVER_URL}/games`)
+    } = await axios.get(`${SERVER_URL}/api/games`)
     dispatch(actions.fetchListSuccess(games))
     poll = setTimeout(() => dispatch(fetchGames(true)), 2000)
   } catch (err) {
@@ -55,7 +55,7 @@ export const createGame = ({ gameName, gameType, password }) => async dispatch =
   try {
     const {
       data: { id },
-    } = await axios.post(`${SERVER_URL}/games`, { gameName, gameType, password })
+    } = await axios.post(`${SERVER_URL}/api/games`, { gameName, gameType, password })
     dispatch(actions.createGameSuccess(id))
   } catch (err) {
     dispatch(
