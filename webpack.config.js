@@ -112,7 +112,15 @@ module.exports = {
           //
           // We use style-loader in development because because it supports hot
           // reloading, while MiniCSSExtractPlugin.loader doesn't yet.
-          inDevMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+          inDevMode
+            ? 'style-loader'
+            : {
+                loader: MiniCssExtractPlugin.loader,
+                options: {
+                  importLoaders: 1,
+                  publicPath: path.resolve(__dirname, 'public'),
+                },
+              },
           // Interprets and resolves @import and url() statements in CSS.
           {
             loader: 'css-loader',
@@ -131,22 +139,45 @@ module.exports = {
       {
         test: /\.css$/,
         exclude: [/node_modules/, /index.css/],
-        use: [
-          inDevMode ? 'style-loader' : MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-              // Enable local scoping of css classes - this naming matches the
-              // naming defined in the .babelrc. The .babelrc uses babel-plugin-react-css-modules
-              // to enable the use of the styleName prop in components.
-              modules: {
-                localIdentName: inDevMode ? '[name]_[local]_[hash:base64:5]' : '[hash:base64]',
+        use: inDevMode
+          ? [
+              'style-loader',
+              {
+                loader: 'css-loader',
+                options: {
+                  importLoaders: 1,
+                  // Enable local scoping of css classes - this naming matches the
+                  // naming defined in the .babelrc. The .babelrc uses babel-plugin-react-css-modules
+                  // to enable the use of the styleName prop in components.
+                  modules: {
+                    localIdentName: '[name]_[local]_[hash:base64:5]',
+                  },
+                },
               },
-            },
-          },
-          'postcss-loader',
-        ],
+              'postcss-loader',
+            ]
+          : [
+              {
+                loader: MiniCssExtractPlugin.loader,
+                options: {
+                  importLoaders: 1,
+                  publicPath: path.resolve(__dirname, 'public'),
+                },
+              },
+              {
+                loader: 'css-loader',
+                options: {
+                  importLoaders: 1,
+                  // Enable local scoping of css classes - this naming matches the
+                  // naming defined in the .babelrc. The .babelrc uses babel-plugin-react-css-modules
+                  // to enable the use of the styleName prop in components.
+                  modules: {
+                    localIdentName: '[name]_[local]_[hash:base64:5]',
+                  },
+                },
+              },
+              'postcss-loader',
+            ],
       },
       // Enables importing/requiring images directly in JS. For each imported file,
       // it emits a file in the output directory. As far as the browser can see,
