@@ -47,7 +47,7 @@ export const fetchGame = ({ id, password, onSuccess, isPoll = false }) => async 
     } = await axios.get(`${SERVER_URL}/api/games/${id}`, isPoll ? {} : { params: { password } }) // Send username on first fetch to add user to game
     if (onSuccess) onSuccess()
     dispatch(actions.fetchGameSuccess(formatGame(game, username)))
-    poll = setTimeout(() => dispatch(fetchGame({ id, isPoll: true })), 2000)
+    poll = setTimeout(() => dispatch(fetchGame({ id, isPoll: true })), 3000)
   } catch (err) {
     dispatch(
       handleError(err, {
@@ -94,7 +94,7 @@ export const submitAction = ({ id, action, data, onSuccess }) => async (dispatch
     })
     dispatch(actions.submitActionSuccess(formatGame(game, username)))
     if (onSuccess) onSuccess()
-    setTimeout(() => dispatch(fetchGame({ id, isPoll: true })), 2000)
+    setTimeout(() => dispatch(fetchGame({ id, isPoll: true })), 3000)
   } catch (err) {
     dispatch(handleError(err, actions.submitActionError))
   }
