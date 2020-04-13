@@ -39,7 +39,11 @@
 
 .cah .headerSpacer {
   background-color: black;
-  border-left: 1px solid white;
+}
+@media not all and (max-width: 480px) {
+  .cah .headerSpacer {
+    border-left: 1px solid white;
+  }
 }
 .cah .deleteContainer {
   background-color: black;

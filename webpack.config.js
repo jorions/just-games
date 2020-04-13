@@ -37,7 +37,6 @@ module.exports = {
   devtool: 'eval-source-map',
   // Defines the options for webpack-dev-server
   devServer: {
-    port: 5051,
     // Set a base path that content not from webpack is served from
     contentBase: path.resolve(__dirname, 'public'),
     // Make sure that all routes we hit will serve our index.html
@@ -157,7 +156,7 @@ module.exports = {
         test: /\.(jpg|png|svg)$/,
         loader: 'file-loader',
         options: {
-          name: inDevMode ? '[path][name].[hash].[ext]' : '[name].[hash].ext',
+          name: inDevMode ? '[path][name].[hash].[ext]' : '[name].[hash].[ext]',
         },
       },
     ],

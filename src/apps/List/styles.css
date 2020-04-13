@@ -53,10 +53,15 @@
 }
 .list > div {
   margin: 1rem;
+  border: 2px solid var(--blue);
+  border-radius: 4px;
 }
 @media (max-width: 480px) {
   .list {
-    background-color: var(--light-gray);
+    width: 100%;
+  }
+  .list > div {
+    width: 100% !important;
   }
 }
 
@@ -66,11 +71,6 @@
 @media not all and (max-width: 480px) {
   .card {
     width: 25rem !important;
-  }
-}
-@media (max-width: 480px) {
-  .card {
-    width: 100%;
   }
 }
 

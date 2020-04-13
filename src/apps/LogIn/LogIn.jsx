@@ -89,7 +89,13 @@ class LogIn extends PureComponent {
               fullWidth
               onChange={this.handleChange}
             />
-            <PasswordInput name="password" value={password} onChange={this.handleChange} />
+            <PasswordInput
+              name="password"
+              placeholder="Password (optional)"
+              label="Password (optional)"
+              value={password}
+              onChange={this.handleChange}
+            />
             <div className="mv4 flex-centered h4">
               {logInLoading ? (
                 <div className="w4 h4">

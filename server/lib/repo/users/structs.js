@@ -4,7 +4,7 @@ const struct = require('../../structs')
 
 const SignUp = struct({
   username: 'shortStringWithContent',
-  password: 'shortStringWithContent',
+  password: 'shortString',
   isCreate: 'boolean?',
 })
 

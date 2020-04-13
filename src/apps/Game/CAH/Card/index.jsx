@@ -27,7 +27,9 @@ const Card = ({ id, text, selected, canSelect, small, onClick }) => (
         />
         {selected && (
           <div styleName="count">
-            <Typography variant="h1">{selected}</Typography>
+            <Typography variant="h1" classes={{ h1: styles.countText }}>
+              {selected}
+            </Typography>
           </div>
         )}
       </CardActionArea>

@@ -19,7 +19,16 @@
   padding: 1.5rem;
   margin: 1rem 1rem 0;
   position: relative;
-  display: inline-block;
+}
+@media not all and (max-width: 480px) {
+  .blackCard {
+    display: inline-block;
+  }
+}
+@media (max-width: 480px) {
+  .blackCard {
+    margin: 1rem auto 0;
+  }
 }
 
 .pick {
@@ -43,26 +52,49 @@
 
 .playedCards {
   display: inline-block;
-  width: calc(100% - 17rem); /* 17 rem is total width of .blackCard */
-  height: 24rem; /* height of .blackCard */
   vertical-align: top;
   overflow-y: scroll;
   padding-top: 1rem;
 }
+@media not all and (max-width: 480px) {
+  .playedCards {
+    width: calc(100% - 17rem); /* 17 rem is total width of .blackCard */
+    height: 24rem; /* height of .blackCard */
+  }
+}
 .playedCards > div {
   display: inline-block;
-  margin-right: 2rem;
-  margin-bottom: 2rem;
 }
 .playedCards > button {
-  padding-right: 1.5rem;
   vertical-align: top;
   margin-bottom: 1rem;
   text-align: left;
   border-radius: 1rem;
 }
+.playedCards > div:last-child,
+.playedCards > button:last-child {
+  margin-right: 0px;
+}
 .playedCards > .winner {
   background-color: var(--green) !important;
+}
+@media not all and (max-width: 480px) {
+  .playedCards > button {
+    padding-right: 1.5rem;
+  }
+  .playedCards > div {
+    margin-right: 2rem;
+    margin-bottom: 2rem;
+  }
+}
+@media (max-width: 480px) {
+  .playedCards > div {
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+  }
+  .playedCards > button {
+    padding-right: 1rem;
+  }
 }
 
 
@@ -73,11 +105,20 @@
   flex-wrap: wrap;
 }
 .players > div {
-  width: 9rem;
   margin: 5px 0;
   padding-right: 5px;
   border-left: 2px solid var(--blue);
   padding-left: 1rem;
+}
+@media not all and (max-width: 480px) {
+  .players > div {
+    width: 9rem;
+  }
+}
+@media (max-width: 480px) {
+  .players > div {
+    width: 8rem;
+  }
 }
 .players > div.czar {
   border-left: 2px solid var(--green);

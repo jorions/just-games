@@ -1,26 +1,24 @@
-:root {
-  --listing-mobile-height: 6rem;
-}
-
 .card {
   cursor: pointer;
   border-radius: 10px !important;
-  height: 15rem;
-  width: 10rem;
-  transition: transform var(--fast);
-}
-.card:hover {
-  transform: scale(1.1);
   transition: transform var(--fast);
 }
 @media not all and (max-width: 480px) {
+  .card {
+    height: 15rem;
+    width: 10rem;
+  }
+  .card:hover {
+    transform: scale(1.1);
+    transition: transform var(--fast);
+  }
   .card:not(.small) {
     margin: 1.5rem .75rem 0;
   }
 }
 @media (max-width: 480px) {
   .card {
-    height: var(--listing-mobile-height);
+    min-height: 6rem;
     width: 100%;
     margin: .5rem;
   }
@@ -40,9 +38,19 @@
 .text {
   line-height: 23px !important;
   border-radius: 10px !important;
-  height: 15rem;
-  width: 10rem;
   padding: .75rem;
+}
+@media not all and (max-width: 480px) {
+  .text {
+    height: 15rem;
+    width: 10rem;
+  }
+}
+@media (max-width: 480px) {
+  .text {
+    min-height: 6rem;
+    width: 100%;
+  }
 }
 .text.long {
   font-size: 12px;
@@ -59,8 +67,12 @@
 }
 
 .focusHighlight {
-  background-color: var(--blue);
   position: relative;
+}
+@media not all and (max-width: 480px) {
+  .focusHighlight {
+    background-color: var(--blue);
+  }
 }
 
 .selected {
@@ -71,8 +83,21 @@
   width: 100%;
   position: absolute;
   text-align: center;
-  bottom: 10%;
-  opacity: 0.5;
-  color: var(--green);
+  opacity: 0.3;
+  color: var(--blue);
   font-size: 20px;
+}
+@media not all and (max-width: 480px) {
+  .count {
+    bottom: 10%;
+  }
+}
+@media (max-width: 480px) {
+  .count {
+    top: 10%;
+    height: 100%;
+  }
+  .countText {
+    font-size: 70px !important;
+  }
 }

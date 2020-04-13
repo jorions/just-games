@@ -58,7 +58,7 @@ class CAH extends PureComponent {
 
     if (status.key === PLAYERS_SUBMITTING) {
       if (isCzar) return 'Waiting for everyone to submit cards to you'
-      if (players.filter(p => p.username === username).submitted) return 'Waiting on other players'
+      if (players.find(p => p.username === username).submitted) return 'Waiting on other players'
 
       const selectedCount = selected.length
       if (selectedCount === prompt.pick)
@@ -174,7 +174,7 @@ class CAH extends PureComponent {
         id={`yourCard_${text}`}
         text={text}
         onClick={canSelect ? () => this.handleOwnCardClick(idx) : () => {}}
-        selected={selected.includes(idx) ? selected.indexOf(idx) + 1 : 0}
+        selected={selected.includes(idx) ? selected.indexOf(idx) + 1 : null}
         canSelect={canSelect}
         owned
       />
