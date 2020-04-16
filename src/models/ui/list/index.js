@@ -33,14 +33,14 @@ export const fetchGames = isPoll => async (dispatch, getState) => {
       data: { games },
     } = await axios.get(`${SERVER_URL}/api/games`)
     dispatch(actions.fetchListSuccess(games))
-    poll = setTimeout(() => dispatch(fetchGames(true)), 3000)
+    poll = setTimeout(() => dispatch(fetchGames(true)), 2500)
   } catch (err) {
     if (!getState().user.username) return // Avoid showing error if we log out while polling
     dispatch(
       handleError(err, () => {
         // Silently fail
         if (isPoll) {
-          poll = setTimeout(() => dispatch(fetchGames(true)), 3000)
+          poll = setTimeout(() => dispatch(fetchGames(true)), 2500)
           return null
         }
 

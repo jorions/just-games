@@ -12,7 +12,7 @@ const INVALID_PASSWORD = 'invalidPassword'
 const INVALID_GAME_TYPE = 'invalidGameType'
 const UNAUTHORIZED = 'unauthorized'
 
-const MAX_TIME_BEFORE_INACTIVE_IN_MS = 1000 * 60 * 5 // 5m
+const MAX_TIME_BEFORE_INACTIVE_IN_MS = 1000 * 20 // 20s
 const MAX_TIME_BEFORE_DELETE_IN_MS = 1000 * 60 * 60 * 24 // 1d
 
 const store = {
@@ -94,8 +94,6 @@ const getAllActiveUsernamesInGames = gameIdToFilter => {
 
 const logIn = username => {
   const user = store.users[username]
-  console.log('IN')
-  console.log(store.users)
   if (user && user.isActive) throw new ValidationError('Account is already taken', ACCOUNT_TAKEN)
   refreshUser(username)
 }
