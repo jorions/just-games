@@ -10,7 +10,7 @@ const { PICKING_WINNER, WINNER, PLAYERS_SUBMITTING } = games[gameNames.CAH].stat
 const getNewBlackDeckIdxs = () => shuffle([...Array(startingCards.blackCards.length).keys()])
 const getNewWhiteDeckIdxs = () => shuffle([...Array(startingCards.whiteCards.length).keys()])
 
-const ROUND_COOLDOWN = 10
+const ROUND_COOLDOWN_IN_MS = 5000
 
 // Use 'function' to avoid binding 'this' to above scope. This lets us create multiple instances of the game.
 class CAH {
@@ -78,12 +78,16 @@ class CAH {
     // the list of czars to start at the same size as the count of active players.
     const baselineCzarsToFilterOut =
       activePlayerCount < this.#pastCzars.length
-        ? this.#pastCzars.slice(
-            this.#pastCzars.length - activePlayerCount,
-            this.#pastCzars.length - 1,
-          )
+        ? this.#pastCzars.slice(this.#pastCzars.length - activePlayerCount, this.#pastCzars.length)
         : this.#pastCzars
     const getNextCzar = (offset = 0) => {
+      // If we've reached the end of the array just pick an active player at random
+      if (offset === baselineCzarsToFilterOut.length) {
+        const activeUsernames = Object.keys(activePlayers)
+        return activeUsernames.length
+          ? activeUsernames[Math.floor(Math.random() * activeUsernames.length)]
+          : null // If there are no active users bail out to avoid a stack overflow
+      }
       const czarsToFilterOut = baselineCzarsToFilterOut.slice(
         offset,
         baselineCzarsToFilterOut.length,
@@ -167,7 +171,7 @@ class CAH {
       // Give winner the black card
       winningPlayer.winningCards.push(this.prompt)
       this.moveToNextRound()
-    }, ROUND_COOLDOWN)
+    }, ROUND_COOLDOWN_IN_MS)
   }
 
   submitCards(username, playedCards) {
@@ -282,31 +286,5 @@ class CAH {
     }
   }
 }
-
-//
-// const game = createGame('someGame', 'orion')
-// game.addOrRefreshPlayer('newGuy')
-// let [card] = game.getGame('newGuy').players.newGuy.cards
-// game.submitCards('newGuy', [card])
-// console.log('AFTER SUBMIT')
-// console.log(game.getGame('newGuy'))
-// game.pickWinner('orion', 'newGuy')
-// console.log('AFTER PICK WINNER')
-// console.log(game.getGame('newGuy'))
-// setTimeout(() => {
-//   console.log('AFTER ROUND CHANGE')
-//   console.log(game.getGame('newGuy'))
-//   card = game.getGame('orion').players.orion.cards[0]
-//   game.submitCards('orion', [card])
-//   console.log('AFTER SUBMIT')
-//   console.log(game.getGame('orion'))
-//   game.pickWinner('newGuy', 'orion')
-//   console.log('AFTER PICK WINNER')
-//   console.log(game.getGame('orion'))
-//   setTimeout(() => {
-//     console.log('AFTER ROUND CHANGE')
-//     console.log(game.getGame('orion'))
-//   }, 1000)
-// }, 1000)
 
 module.exports = CAH
