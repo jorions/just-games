@@ -3,7 +3,9 @@
     margin-top: 3rem;
     max-width: 600px;
     margin: 2rem auto;
-    padding: 0 1rem;
+    padding: 0 1rem 1rem;
+    border-radius: 15px;
+    border: 1px solid var(--green);
   }
   .createGame > div {
     display: inline-block;

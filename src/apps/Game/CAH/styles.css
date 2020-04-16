@@ -78,6 +78,9 @@
 .playedCards > .winner {
   background-color: var(--green) !important;
 }
+.playedCards > .won > div {
+  color: var(--green);
+}
 @media not all and (max-width: 480px) {
   .playedCards > button {
     padding-right: 1.5rem;

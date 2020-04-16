@@ -92,7 +92,7 @@ class LogIn extends PureComponent {
                   <Button
                     type="submit"
                     variant="contained"
-                    color="primary"
+                    color="secondary"
                     name="logIn"
                     onClick={this.handleSubmit}
                     disabled={disableButton}

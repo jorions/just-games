@@ -90,6 +90,7 @@ class CAH extends PureComponent {
 
     const isPlayer = username === p.username
     let statusText = p.submitted ? 'Played' : 'Submitting'
+    if (status.key === PICKING_WINNER && !p.submitted) statusText = 'Waiting to play' // Player joined during winner picking
     if (!p.isActive) statusText = 'Inactive'
     if (status.key === WINNER && status.key === p.username) statusText = 'Winner!'
 
@@ -133,27 +134,48 @@ class CAH extends PureComponent {
         </div>
       )
 
-    const cards = usernameOrSet.map(text => (
-      <Card
-        key={`playedCard_${text}`}
-        id={`playedCard_${text}`}
-        text={text}
-        onClick={this.selectOtherPlayersCard}
-        canSelect={false}
-        small
-      />
-    ))
+    if (status.key === PICKING_WINNER) {
+      const cards = usernameOrSet.map(text => (
+        <Card
+          key={`playedCard_${text}`}
+          id={`playedCard_${text}`}
+          text={text}
+          onClick={this.selectOtherPlayersCard}
+          canSelect={false}
+          small
+        />
+      ))
+      return isCzar ? (
+        <Button
+          key={`playedCards_visible_${usernameOrSet.join(',')}`}
+          onClick={() => this.handleWinnerClick(idx)}
+          styleName={style({ winner: winner === idx })}
+        >
+          {cards}
+        </Button>
+      ) : (
+        <div key={`playedCards_visible_${usernameOrSet.join(',')}`}>{cards}</div>
+      )
+    }
 
-    return status.key === PICKING_WINNER && isCzar ? (
-      <Button
-        key={`playedCards_visible_${usernameOrSet.join(',')}`}
-        onClick={() => this.handleWinnerClick(idx)}
-        styleName={style({ winner: winner === idx })}
+    const { player, playedCards } = usernameOrSet
+
+    return (
+      <div
+        key={`playedCards_visible_${playedCards.join(',')}`}
+        styleName={style({ won: player === status.data })}
       >
-        {cards}
-      </Button>
-    ) : (
-      <div key={`playedCards_visible_${usernameOrSet.join(',')}`}>{cards}</div>
+        {playedCards.map(text => (
+          <Card
+            key={`playedCard_${text}`}
+            id={`playedCard_${text}`}
+            text={text}
+            onClick={this.selectOtherPlayersCard}
+            canSelect={false}
+            small
+          />
+        ))}
+      </div>
     )
   }
 
@@ -230,16 +252,24 @@ class CAH extends PureComponent {
 CAH.propTypes = {
   status: PropTypes.shape({
     key: PropTypes.string.isRequired,
-    data: PropTypes.string.isRequired,
+    data: PropTypes.string,
   }).isRequired,
   czar: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
   prompt: PropTypes.shape({
     text: PropTypes.string.isRequired,
     pick: PropTypes.number.isRequired,
   }).isRequired,
   playedCardsThisRound: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
+    PropTypes.oneOfType([
+      PropTypes.string, // Player name. When cards are being submitted
+      PropTypes.arrayOf(PropTypes.string), // Card text. When winner is being picked
+      // Full info. When winner was picked
+      PropTypes.shape({
+        player: PropTypes.string.isRequired,
+        playedCards: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+      }),
+    ]),
   ).isRequired,
   yourCards: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   players: PropTypes.arrayOf(
@@ -254,6 +284,10 @@ CAH.propTypes = {
   isCzar: PropTypes.bool.isRequired,
   submitActionLoading: PropTypes.bool.isRequired,
   submitAction: PropTypes.func.isRequired,
+}
+
+CAH.defaultProps = {
+  name: null,
 }
 
 export default CAH

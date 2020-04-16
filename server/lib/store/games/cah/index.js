@@ -263,16 +263,18 @@ class CAH {
 
   getGame = username => {
     const { owner, status, czar, prompt, playedCardsThisRound, players } = this
+    let formattedCardsThisRound = playedCardsThisRound
+    if (status.key === PLAYERS_SUBMITTING)
+      formattedCardsThisRound = playedCardsThisRound.map(({ player }) => player)
+    else if (status.key === PICKING_WINNER)
+      formattedCardsThisRound = playedCardsThisRound.map(({ playedCards }) => playedCards)
     return {
       owner,
       status,
       czar,
       name: this.name,
       prompt,
-      playedCardsThisRound:
-        status.key === PLAYERS_SUBMITTING
-          ? playedCardsThisRound.map(({ player }) => player)
-          : playedCardsThisRound.map(({ playedCards }) => playedCards),
+      playedCardsThisRound: formattedCardsThisRound,
       players: Object.entries(players).reduce((acc, [u, info]) => {
         if (u === username) acc[u] = info
         else
