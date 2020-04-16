@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = process.env
 
 // Use 1 day as this is the length of time we wait for someone to be inactive
-const sign = data => jwt.sign(data, JWT_SECRET, { expiresIn: '1s' })
+const sign = data => jwt.sign(data, JWT_SECRET, { expiresIn: '1d' })
 
 const verify = (log, token) =>
   new Promise((resolve, reject) => {
