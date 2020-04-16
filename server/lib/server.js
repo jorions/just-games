@@ -7,7 +7,7 @@ const routes = require('../routes')
 const { SERVER_PORT } = process.env
 
 const { app } = buildServer({
-  name: 'games',
+  name: 'just-games',
   routes,
   allowCors: true,
   port: SERVER_PORT,
