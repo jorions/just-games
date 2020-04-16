@@ -44,6 +44,8 @@ router.get('/:id', parseAndRefreshAuth, ({ request, response, state, captures: [
       query: { password },
     } = request
 
+    state.responseBodyMaxLoggingLen = 10 // eslint-disable-line no-param-reassign
+
     response.body = {
       game: store.getGame({ id, password, username: state.username }),
     }

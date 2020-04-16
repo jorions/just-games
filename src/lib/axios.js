@@ -26,8 +26,8 @@ instance.interceptors.response.use(
     return res
   },
   err => {
-    // TODO: Move to reach router to avoid using 'history' package
-    if (err.response && err.response.status === 401) {
+    // TODO: Move to reach router to avoid using 'history' package, then confirm this works
+    if (err.response && err.response.status === 403) {
       removeUser()
       history.push('/')
     }

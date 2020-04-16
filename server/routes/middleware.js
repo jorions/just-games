@@ -19,7 +19,7 @@ module.exports = {
       username = parsed.data.username
     } catch (err) {
       ctx.state.warning = 'Token failed validation'
-      ctx.response.status = 401
+      ctx.response.status = 403 // Don't use this response anywhere else or axios will log the user out
       return
     }
 
