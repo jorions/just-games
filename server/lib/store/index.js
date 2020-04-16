@@ -12,7 +12,7 @@ const INVALID_PASSWORD = 'invalidPassword'
 const INVALID_GAME_TYPE = 'invalidGameType'
 const UNAUTHORIZED = 'unauthorized'
 
-const MAX_TIME_BEFORE_INACTIVE_IN_MS = 10000 // 10s
+const MAX_TIME_BEFORE_INACTIVE_IN_MS = 1000 * 60 * 5 // 5m
 const MAX_TIME_BEFORE_DELETE_IN_MS = 1000 * 60 * 60 * 24 // 1d
 
 const store = {
@@ -55,6 +55,7 @@ setInterval(() => {
     Object.entries(players).forEach(([username, userGameInfo]) => {
       // If the player is currently active and hasn't polled in too long, mark inactive for game
       if (userGameInfo.isActive && now - userGameInfo.lastPolled > MAX_TIME_BEFORE_INACTIVE_IN_MS) {
+        // TODO: Inactive players too frequently
         store.games[gameId].markPlayerInactive(username)
       }
       if (store.games[gameId].players[username].isActive) deleteGame = false
