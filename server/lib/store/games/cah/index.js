@@ -144,6 +144,7 @@ class CAH {
         ({ player }) => player === username,
       )
       if (playedCardsIdx !== -1) this.playedCardsThisRound.splice(playedCardsIdx, 1)
+      // TODO: If only the czar and 1 player are in, and player goes inactive, the game it goes into a weird state
       this.moveToPickingWinnerIfAllHavePlayed()
     }
   }

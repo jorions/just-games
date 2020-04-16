@@ -27,6 +27,7 @@ class Game extends PureComponent {
   componentWillUnmount() {
     const { reset } = this.props
     reset()
+    // TODO: Submit request to mark user as inactive in game
   }
 
   handlePasswordChange = ({ target: { value } }) => {
@@ -98,6 +99,7 @@ class Game extends PureComponent {
               },
             ],
           },
+          // TODO: Add "Go Back" button, change other button to "Try again"
           {
             isOpen: playerInGame,
             title: "You're already in a game",

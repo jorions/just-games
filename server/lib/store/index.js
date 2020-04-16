@@ -63,15 +63,15 @@ setInterval(() => {
     if (deleteGame) delete store.games[gameId]
   })
 }, 10000)
-// Once every min, clean up users
+// Once every 10s, clean up users
 setInterval(() => {
-  Object.entries(store.users).forEach(([username], { lastUpdated }) => {
+  Object.entries(store.users).forEach(([username, { lastUpdated }]) => {
     const now = Date.now()
     if (now - lastUpdated > MAX_TIME_BEFORE_DELETE_IN_MS) delete store.users[username]
     else if (now - lastUpdated > MAX_TIME_BEFORE_INACTIVE_IN_MS)
       store.users[username].isActive = false
   })
-}, 60000)
+}, 10000)
 
 const refreshUser = username => {
   store.users[username] = {
@@ -123,6 +123,9 @@ const getGames = username => {
     return { type, owner, name, passwordRequired: !!password, players: Object.keys(players), id }
   })
 }
+
+// TODO: On first fetch of game do isInAnotherGame check.
+// TODO: On subsequent fetches make sure user is already in game.
 
 const getGame = ({ id, username, password }) => {
   const game = store.games[id]
