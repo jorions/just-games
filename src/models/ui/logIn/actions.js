@@ -8,10 +8,6 @@ export const logInError = () => ({
   type: types.LOG_IN_ERROR,
 })
 
-export const invalidCredentials = () => ({
-  type: types.INVALID_CREDENTIALS,
-})
-
 export const usernameTaken = () => ({
   type: types.USERNAME_TAKEN,
 })

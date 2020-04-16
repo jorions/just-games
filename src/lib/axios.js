@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-import { getUser, setUser } from 'lib/storage'
+import { getUser, setUser, removeUser } from 'lib/storage'
+import history from 'lib/history'
 
 const defaultOptions = {
   headers: {
@@ -19,9 +20,19 @@ instance.interceptors.request.use(config => {
 })
 
 // On each request, run this function to store the Authorization token when present in the response
-instance.interceptors.response.use(res => {
-  if (res.data && res.data.newToken) setUser(res.data.newToken)
-  return res
-})
+instance.interceptors.response.use(
+  res => {
+    if (res.data && res.data.newToken) setUser(res.data.newToken)
+    return res
+  },
+  err => {
+    // TODO: Move to reach router to avoid using 'history' package
+    if (err.response && err.response.status === 401) {
+      removeUser()
+      history.push('/')
+    }
+    throw err
+  },
+)
 
 export default instance

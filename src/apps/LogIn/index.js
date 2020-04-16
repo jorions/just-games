@@ -6,11 +6,10 @@ import LogIn from './LogIn'
 
 const mapStateToProps = ({
   ui: {
-    logIn: { logInLoading, invalidCredentials, usernameTaken, logInError },
+    logIn: { logInLoading, usernameTaken, logInError },
   },
 }) => ({
   logInLoading,
-  invalidCredentials,
   usernameTaken,
   logInError,
 })

@@ -7,13 +7,13 @@ import { shortStringCharLimit } from 'shared/validations'
 
 import ErrorModal, { buildErrorProps } from 'components/ErrorModal'
 import TextInput from 'components/TextInput'
-import PasswordInput from 'components/PasswordInput'
 import Spinner from 'components/Spinner'
+import KeyPressListener from 'components/KeyPressListener'
 
 import './styles.css'
 
 class LogIn extends PureComponent {
-  state = { username: '', password: '' }
+  state = { username: '' }
 
   componentWillUnmount() {
     const { reset } = this.props
@@ -24,34 +24,21 @@ class LogIn extends PureComponent {
     if (value.length <= shortStringCharLimit) this.setState({ [name]: value })
   }
 
-  submit = isCreate => {
-    const { invalidCredentials, usernameTaken, submitLogIn } = this.props
-    const { username, password } = this.state
+  handleSubmit = () => {
+    const { usernameTaken, submitLogIn } = this.props
+    const { username } = this.state
 
-    if (invalidCredentials || usernameTaken || !username) return
+    if (usernameTaken || !username) return
 
-    submitLogIn({ username, password, isCreate })
-  }
-
-  handleLogIn = () => {
-    this.submit(false)
-  }
-
-  handleSignUp = () => {
-    this.submit(true)
+    submitLogIn(username)
   }
 
   renderErrorModal() {
-    const { invalidCredentials, usernameTaken, logInError, clearErrors } = this.props
+    const { usernameTaken, logInError, clearErrors } = this.props
 
     return (
       <ErrorModal
         options={[
-          {
-            isOpen: invalidCredentials,
-            title: 'No worky',
-            content: "That username/password combo doesn't exist",
-          },
           {
             isOpen: usernameTaken,
             title: "You're not special",
@@ -68,16 +55,22 @@ class LogIn extends PureComponent {
   }
 
   render() {
-    const { logInLoading, invalidCredentials } = this.props
-    const { username, password } = this.state
+    const { logInLoading } = this.props
+    const { username } = this.state
 
-    const disableButton = invalidCredentials || !username
+    const disableButton = !username
 
     return (
       <>
         <div styleName="container" className="flex-centered ph4 mb4">
-          <div className="flex-centered w-100 mb4">
-            <Typography variant="h4">Log In To Play!</Typography>
+          <KeyPressListener onKeyPress={this.handleSubmit} enterKey />
+          <div className="w-100 center mb4">
+            <div className="inline-block w-100 mb3">
+              <Typography variant="h4">Just games. Plain and simple.</Typography>
+            </div>
+            <div className="inline-block w-100">
+              <Typography variant="h6">Pick a username and start playing</Typography>
+            </div>
           </div>
           <div styleName="form">
             {this.renderErrorModal()}
@@ -87,13 +80,6 @@ class LogIn extends PureComponent {
               placeholder="Username"
               label="Username"
               fullWidth
-              onChange={this.handleChange}
-            />
-            <PasswordInput
-              name="password"
-              placeholder="Password (optional)"
-              label="Password (optional)"
-              value={password}
               onChange={this.handleChange}
             />
             <div className="mv4 flex-centered h4">
@@ -108,23 +94,12 @@ class LogIn extends PureComponent {
                     variant="contained"
                     color="primary"
                     name="logIn"
-                    onClick={this.handleLogIn}
+                    onClick={this.handleSubmit}
                     disabled={disableButton}
                     fullWidth
                     className="mb3"
                   >
-                    Log In
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="secondary"
-                    name="signUp"
-                    onClick={this.handleSignUp}
-                    disabled={disableButton}
-                    fullWidth
-                  >
-                    Sign Up
+                    Start Playing
                   </Button>
                 </>
               )}
@@ -138,7 +113,6 @@ class LogIn extends PureComponent {
 
 LogIn.propTypes = {
   logInLoading: PropTypes.bool.isRequired,
-  invalidCredentials: PropTypes.bool.isRequired,
   usernameTaken: PropTypes.bool.isRequired,
   logInError: PropTypes.bool.isRequired,
   submitLogIn: PropTypes.func.isRequired,

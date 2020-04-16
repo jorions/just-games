@@ -2,7 +2,6 @@ import userActions from 'models/user/actionTypes'
 import types from './actionTypes'
 
 const initialErrors = {
-  invalidCredentials: false,
   usernameTaken: false,
   logInError: false,
 }
@@ -28,11 +27,6 @@ export default (state = initialState, action) => {
       return {
         ...initialState,
         logInError: true,
-      }
-    case types.INVALID_CREDENTIALS:
-      return {
-        ...initialState,
-        invalidCredentials: true,
       }
     case types.USERNAME_TAKEN:
       return {

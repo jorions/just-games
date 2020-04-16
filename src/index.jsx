@@ -11,6 +11,7 @@ import lightBlue from '@material-ui/core/colors/lightBlue'
 import red from '@material-ui/core/colors/red'
 
 import models from 'models'
+import history from 'lib/history'
 
 import ErrorBoundary from 'components/ErrorBoundary'
 import App from 'components/App'
@@ -66,7 +67,7 @@ const theme = createMuiTheme({
 render(
   <ErrorBoundary>
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter history={history}>
         <MuiThemeProvider theme={theme}>
           <App />
         </MuiThemeProvider>

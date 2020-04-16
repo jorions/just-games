@@ -11,10 +11,17 @@ module.exports = {
       state: { log },
     } = ctx
 
-    const {
-      token: newToken,
-      data: { username },
-    } = await parseAndRefreshIfNeeded(log, authorization)
+    let newToken
+    let username
+    try {
+      const parsed = await parseAndRefreshIfNeeded(log, authorization)
+      newToken = parsed.token
+      username = parsed.data.username
+    } catch (err) {
+      ctx.state.warning = 'Token failed validation'
+      ctx.response.status = 401
+      return
+    }
 
     ctx.state.username = username
 

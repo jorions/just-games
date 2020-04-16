@@ -18,7 +18,7 @@ const router = buildRouter('/api/games')
  */
 router.get('/', parseAndRefreshAuth, ({ response, state }) => {
   try {
-    response.body = { games: store.getGames() }
+    response.body = { games: store.getGames(state.username) }
     response.status = 200
   } catch (err) {
     handleError({ response, state, err, msg: 'Something broke while attempting to fetch games' })

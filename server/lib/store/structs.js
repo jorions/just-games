@@ -2,10 +2,14 @@
 
 const struct = require('../structs')
 
+const LogIn = struct({
+  username: 'shortStringWithContent',
+})
+
 const CreateGame = struct({
   gameType: 'string',
   gameName: 'shortStringWithContent',
-  password: 'shortString?',
+  password: 'shortString',
 })
 
-module.exports = { CreateGame }
+module.exports = { LogIn, CreateGame }

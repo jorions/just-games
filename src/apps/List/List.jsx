@@ -141,7 +141,7 @@ class List extends PureComponent {
                         {type}
                       </Typography>
                       <Typography variant="caption" className="w-100 inline-block">
-                        {owner}
+                        Owner: {owner}
                       </Typography>
                       <div className="w-100 ellipsis">
                         <Typography variant="caption" color="textSecondary">

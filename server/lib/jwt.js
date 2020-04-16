@@ -4,7 +4,8 @@ const jwt = require('jsonwebtoken')
 
 const { JWT_SECRET } = process.env
 
-const sign = data => jwt.sign(data, JWT_SECRET, { expiresIn: '10d' })
+// Use 1 day as this is the length of time we wait for someone to be inactive
+const sign = data => jwt.sign(data, JWT_SECRET, { expiresIn: '1s' })
 
 const verify = (log, token) =>
   new Promise((resolve, reject) => {
@@ -18,19 +19,17 @@ const verify = (log, token) =>
     })
   })
 
+const REFRESH_WINDOW_IN_MS = 1000 * 60 * 60 * 2 // 2h
+
 const parseAndRefreshIfNeeded = async (log, token) => {
-  try {
-    const data = await verify(log, token)
-    return { token, data }
-  } catch (err) {
-    if (err.name === 'TokenExpiredError') {
-      log.info('Renewing expired token')
-      const { iat, exp, ...data } = jwt.decode(token)
-      const newToken = sign(data)
-      return { token: newToken, data: { ...data, iat, exp } }
-    }
-    throw err
+  const data = await verify(log, token)
+  const { exp: expInSec, iat: unusedIat, ...relevantData } = data
+  if (expInSec * 1000 - Date.now() < REFRESH_WINDOW_IN_MS) {
+    const newToken = sign(relevantData)
+    const { iat, exp } = jwt.decode(newToken)
+    return { token: newToken, data: { ...relevantData, iat, exp } }
   }
+  return { token, data }
 }
 
 module.exports = {

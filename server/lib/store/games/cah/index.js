@@ -146,7 +146,7 @@ class CAH {
 
   /* ---------------------------- Player actions ---------------------------- */
 
-  pickWinner = (username, pickedWinnerIdx) => {
+  pickWinner(username, pickedWinnerIdx) {
     // Confirm submitter is the czar
     if (this.czar !== username) throw new Error('notCzar')
     // Confirm game is in proper phase
@@ -170,7 +170,7 @@ class CAH {
     }, ROUND_COOLDOWN)
   }
 
-  submitCards = (username, playedCards) => {
+  submitCards(username, playedCards) {
     const player = this.players[username]
     // Confirm player exists
     if (!player) throw new Error('playerDoesNotExist')
@@ -251,8 +251,8 @@ class CAH {
   submitAction = ({ username, action, data }) => {
     const { actions } = games[gameNames.CAH]
     const actionMap = {
-      [actions.SUBMIT_CARDS]: this.submitCards,
-      [actions.PICK_WINNER]: this.pickWinner,
+      [actions.SUBMIT_CARDS]: (...args) => this.submitCards(...args),
+      [actions.PICK_WINNER]: (...args) => this.pickWinner(...args),
     }
     actionMap[action](username, data)
   }
