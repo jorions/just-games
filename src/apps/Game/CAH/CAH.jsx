@@ -25,7 +25,7 @@ class CAH extends PureComponent {
     const { yourCards, submitAction } = this.props
     const { selected } = this.state
 
-    const cardTexts = yourCards.filter((text, idx) => selected.includes(idx))
+    const cardTexts = selected.map(idx => yourCards[idx])
 
     submitAction(SUBMIT_CARDS, cardTexts, () => this.setState({ selected: [] }))
   }
@@ -113,6 +113,7 @@ class CAH extends PureComponent {
     )
   }
 
+  // TODO: Cards shift down on mobile as people play
   renderPlayedCards = (usernameOrSet, idx) => {
     const { status, prompt, isCzar } = this.props
     const { winner } = this.state
