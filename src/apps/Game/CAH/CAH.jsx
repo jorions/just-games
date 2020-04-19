@@ -249,6 +249,11 @@ class CAH extends PureComponent {
   }
 }
 
+const promptProp = PropTypes.shape({
+  text: PropTypes.string.isRequired,
+  pick: PropTypes.number.isRequired,
+})
+
 CAH.propTypes = {
   status: PropTypes.shape({
     key: PropTypes.string.isRequired,
@@ -256,10 +261,7 @@ CAH.propTypes = {
   }).isRequired,
   czar: PropTypes.string.isRequired,
   name: PropTypes.string,
-  prompt: PropTypes.shape({
-    text: PropTypes.string.isRequired,
-    pick: PropTypes.number.isRequired,
-  }).isRequired,
+  prompt: promptProp.isRequired,
   playedCardsThisRound: PropTypes.arrayOf(
     PropTypes.oneOfType([
       PropTypes.string, // Player name. When cards are being submitted
@@ -276,7 +278,7 @@ CAH.propTypes = {
     PropTypes.shape({
       username: PropTypes.string.isRequired,
       isActive: PropTypes.bool.isRequired,
-      winningCards: PropTypes.arrayOf(PropTypes.string).isRequired,
+      winningCards: PropTypes.arrayOf(promptProp).isRequired,
       submitted: PropTypes.bool.isRequired,
     }),
   ).isRequired,
