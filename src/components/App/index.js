@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 
 import { gameNames } from 'shared/games'
 
@@ -21,4 +20,4 @@ const mapStateToProps = ({
   className: game ? styleMap[game.type] : '',
 })
 
-export default withRouter(connect(mapStateToProps)(App))
+export default connect(mapStateToProps)(App)

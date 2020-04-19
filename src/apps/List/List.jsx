@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import { Link, Redirect } from 'react-router-dom'
+import { Link, Redirect } from '@reach/router'
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import Typography from '@material-ui/core/Typography'
@@ -80,7 +80,7 @@ class List extends PureComponent {
     const { games, fetchGamesLoading, newGameId } = this.props
     const { gameName, gameType, password } = this.state
 
-    if (newGameId) return <Redirect to={game(newGameId)} />
+    if (newGameId) return <Redirect to={game(newGameId)} noThrow />
 
     return (
       <div>

@@ -5,13 +5,11 @@ import { render } from 'react-dom'
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
-import { BrowserRouter } from 'react-router-dom'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import lightBlue from '@material-ui/core/colors/lightBlue'
 import red from '@material-ui/core/colors/red'
 
 import models from 'models'
-import history from 'lib/history'
 
 import ErrorBoundary from 'components/ErrorBoundary'
 import App from 'components/App'
@@ -67,11 +65,9 @@ const theme = createMuiTheme({
 render(
   <ErrorBoundary>
     <Provider store={store}>
-      <BrowserRouter history={history}>
-        <MuiThemeProvider theme={theme}>
-          <App />
-        </MuiThemeProvider>
-      </BrowserRouter>
+      <MuiThemeProvider theme={theme}>
+        <App />
+      </MuiThemeProvider>
     </Provider>
   </ErrorBoundary>,
   document.getElementById('root'),

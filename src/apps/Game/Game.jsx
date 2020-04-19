@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
-import { Redirect } from 'react-router-dom'
+import { Redirect } from '@reach/router'
 
 import { gameNames } from 'shared/games'
 
@@ -63,7 +63,7 @@ class Game extends PureComponent {
       submitActionError,
       clearErrors,
       fetchGame,
-      history,
+      navigate,
     } = this.props
     const { password, lastSubmittedPassword } = this.state
 
@@ -74,7 +74,7 @@ class Game extends PureComponent {
             isOpen: gameNotFound,
             title: 'Game not found',
             content: "Can't find that one - sorry!",
-            onOKClick: () => history.push('/'),
+            onOKClick: () => navigate('/'),
           },
           {
             isOpen: invalidPassword,
@@ -89,7 +89,7 @@ class Game extends PureComponent {
               {
                 value: 'Go Back',
                 color: 'secondary',
-                onClick: () => history.push('/'),
+                onClick: () => navigate('/'),
                 className: styles.goBackButton,
               },
               {
@@ -128,7 +128,7 @@ class Game extends PureComponent {
             isOpen: gameEnded,
             title: 'This game has ended',
             content: 'Click OK to go back to the list of games',
-            onOKClick: () => history.push('/'),
+            onOKClick: () => navigate('/'),
           },
           buildErrorProps({
             isOpen: submitActionError,
@@ -178,7 +178,7 @@ class Game extends PureComponent {
         </div>
       )
 
-    if (deleteGameSuccess) return <Redirect to="/" />
+    if (deleteGameSuccess) return <Redirect to="/" noThrow />
 
     return (
       <>
@@ -249,9 +249,7 @@ Game.propTypes = {
   gameEnded: PropTypes.bool.isRequired,
   submitActionError: PropTypes.bool.isRequired,
   className: PropTypes.string.isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+  navigate: PropTypes.func.isRequired,
   fetchGame: PropTypes.func.isRequired,
   deleteGame: PropTypes.func.isRequired,
   submitAction: PropTypes.func.isRequired,

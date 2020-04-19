@@ -1,6 +1,13 @@
+import { logOut } from 'models/globalActions'
+
 export default (err, handlers) => dispatch => {
   const { response = {} } = err
   const { data = {}, status } = response
+
+  if (status === 403) {
+    dispatch(logOut())
+    return
+  }
 
   if (typeof handlers === 'function') {
     const toDispatch = handlers(data)

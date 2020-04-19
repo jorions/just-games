@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 
 import { gameNames } from 'shared/games'
 import { fetchGame, deleteGame, submitAction, clearErrors, reset } from 'models/ui/game'
@@ -48,37 +47,23 @@ const mapStateToProps = ({
   className: game ? styleMap[game.type] : '',
 })
 
-export default withRouter(
-  connect(mapStateToProps, (dispatch, props) => ({
-    fetchGame: (password, onSuccess) => {
-      const {
-        match: {
-          params: { id },
-        },
-      } = props
-      dispatch(fetchGame({ id, password, onSuccess }))
-    },
-    deleteGame: () => {
-      const {
-        match: {
-          params: { id },
-        },
-      } = props
-      dispatch(deleteGame(id))
-    },
-    submitAction: (action, data, onSuccess) => {
-      const {
-        match: {
-          params: { id },
-        },
-      } = props
-      dispatch(submitAction({ id, action, data, onSuccess }))
-    },
-    reset: () => {
-      dispatch(reset())
-    },
-    clearErrors: () => {
-      dispatch(clearErrors())
-    },
-  }))(Game),
-)
+export default connect(mapStateToProps, (dispatch, props) => ({
+  fetchGame: (password, onSuccess) => {
+    const { id } = props
+    dispatch(fetchGame({ id, password, onSuccess }))
+  },
+  deleteGame: () => {
+    const { id } = props
+    dispatch(deleteGame(id))
+  },
+  submitAction: (action, data, onSuccess) => {
+    const { id } = props
+    dispatch(submitAction({ id, action, data, onSuccess }))
+  },
+  reset: () => {
+    dispatch(reset())
+  },
+  clearErrors: () => {
+    dispatch(clearErrors())
+  },
+}))(Game)

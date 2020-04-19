@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 
 import { gameNames } from 'shared/games'
 import { logOut } from 'models/globalActions'
@@ -22,4 +21,4 @@ const mapStateToProps = ({
   className: game ? styleMap[game.type] : '',
 })
 
-export default withRouter(connect(mapStateToProps, { logOut })(Nav))
+export default connect(mapStateToProps, { logOut })(Nav)

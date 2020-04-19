@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { hot } from 'react-hot-loader/root'
-import { Route } from 'react-router-dom'
-import { Redirect, Switch } from 'react-router'
+import { Router, Redirect } from '@reach/router'
 
 import { logIn, logOut, game } from 'routes'
 
@@ -15,9 +14,20 @@ import PathFallback from './PathFallback'
 
 import './styles.css'
 
+// Use 'noThrow' to mute expected React error on redirect https://reach.tech/router/api/Redirect
+const ConditionalRedirect = ({ redirect, redirectTo, Component, ...props }) =>
+  redirect ? <Redirect to={redirectTo} noThrow /> : <Component {...props} />
+
+ConditionalRedirect.propTypes = {
+  redirect: PropTypes.bool.isRequired,
+  redirectTo: PropTypes.string.isRequired,
+  Component: PropTypes.shape().isRequired,
+}
+
 class App extends PureComponent {
   state = { collapsed: false }
 
+  // TODO: Implement collapse
   toggleCollapse = () => {
     this.setState(({ collapsed }) => ({ collapsed: !collapsed }))
   }
@@ -29,16 +39,28 @@ class App extends PureComponent {
       <ErrorBoundary>
         <Nav collapsed={collapsed} toggleCollapse={this.toggleCollapse} />
         <div className={className} styleName="appContainer">
-          <Switch>
-            <Route exact path="/" render={() => (!loggedIn ? <Redirect to={logIn} /> : <List />)} />
-            <Route path={logIn} render={() => (loggedIn ? <Redirect to="/" /> : <LogIn />)} />
-            <Route
-              path={game(':id')}
-              render={() => (!loggedIn ? <Redirect to={logIn} /> : <Game />)}
+          <Router>
+            <ConditionalRedirect
+              path="/"
+              redirect={!loggedIn}
+              redirectTo={logIn}
+              Component={List}
             />
-            <Route path={logOut} render={() => <Redirect to={logIn} />} />
-            <Route component={PathFallback} />
-          </Switch>
+            <ConditionalRedirect
+              path={logIn}
+              redirect={loggedIn}
+              redirectTo="/"
+              Component={LogIn}
+            />
+            <ConditionalRedirect
+              path={game(':id')}
+              redirect={!loggedIn}
+              redirectTo={logIn}
+              Component={Game}
+            />
+            <Redirect from={logOut} to={logIn} noThrow />
+            <PathFallback default />
+          </Router>
         </div>
       </ErrorBoundary>
     )
