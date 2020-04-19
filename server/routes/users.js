@@ -14,7 +14,6 @@ const router = buildRouter('/api/users')
  *
  * Responds
  *  200: OK
- *    newToken: JWT
  *  409: Account already exists
  *    error: { message: 'That username is already in use', code: 'accountTaken' }
  *  500: Server error
@@ -31,7 +30,9 @@ router.post('/log-in', async ({ request, response, state }) => {
     store.logIn(username)
 
     response.status = 200
-    response.body = { newToken: jwt.sign({ username }) }
+    // This is the logic used by our middleware for refreshing a token
+    response.set('New-Token', jwt.sign({ username }))
+    response.set('Access-Control-Expose-Headers', 'New-Token')
   } catch (err) {
     const options = {
       [store.validationErrors.ACCOUNT_TAKEN]: {

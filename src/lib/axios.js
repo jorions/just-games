@@ -22,7 +22,7 @@ instance.interceptors.request.use(config => {
 // On each request, run this function to store the Authorization token when present in the response
 instance.interceptors.response.use(
   res => {
-    if (res.data && res.data.newToken) setUser(res.data.newToken)
+    if (res.headers['new-token']) setUser(res.headers['new-token'])
     return res
   },
   err => {

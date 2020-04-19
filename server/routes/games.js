@@ -113,11 +113,18 @@ router.post('/', parseAndRefreshAuth, ({ request, response, state }) => {
   }
 })
 
+/**
+ * Responds
+ *  204: OK
+ *  401: Unauthorized
+ *    error: { message: "You don't have permission to do that", code: 'unauthorized' }
+ *  500: Server error
+ *    error: { message: 'Something broke while attempting to delete the game' }
+ */
 router.delete('/:id', parseAndRefreshAuth, ({ response, state, captures: [id] }) => {
   try {
     store.deleteGame(id, state.username)
 
-    response.body = {}
     response.status = 204
   } catch (err) {
     const options = {
@@ -132,12 +139,31 @@ router.delete('/:id', parseAndRefreshAuth, ({ response, state, captures: [id] })
   }
 })
 
-// TODO: Validate input
+/**
+ * Receives
+ *  action: String
+ *  data: { ... }
+ *
+ * Responds
+ *  201: OK
+ *    game: Game
+ *  401: Unauthorized
+ *    error: { message: "You don't have permission to do that", code: 'unauthorized' }
+ *  404: Not found
+ *    error: { message: 'That game does not exist', code: 'gameNotFound' }
+ *  500: Server error
+ *    error: { message: 'Something broke while attempting to submit your action' }
+ *
+ *  400: Invalid info submitted (generic)
+ *    error: { message: Missing or incorrectly formatted data, fields: { ... } }
+ */
 router.post('/:id/action', parseAndRefreshAuth, ({ request, response, state, captures: [id] }) => {
   try {
     const {
       body: { action, data },
     } = request
+
+    // TODO: Validate input
 
     store.submitAction({ id, username: state.username, action, data })
 
@@ -149,7 +175,11 @@ router.post('/:id/action', parseAndRefreshAuth, ({ request, response, state, cap
         status: 401,
         message: "You don't have permission to do that",
       },
-      defaultMessage: 'Something broke while attempting to delete the game',
+      [store.validationErrors.GAME_NOT_FOUND]: {
+        status: 404,
+        message: 'That game does not exist',
+      },
+      defaultMessage: 'Something broke while attempting to submit your action',
     }
 
     handleError({ response, state, err, options })

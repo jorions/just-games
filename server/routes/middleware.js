@@ -27,8 +27,10 @@ module.exports = {
 
     await next()
 
-    // If its a good response and token got refreshed, add to body
-    if (ctx.response.status > 300 && newToken !== authorization)
-      ctx.response.body.newToken = newToken
+    // If its a good response and token got refreshed, add to response headers
+    if (ctx.response.status < 300 && newToken !== authorization) {
+      ctx.response.set('New-Token', newToken)
+      ctx.response.set('Access-Control-Expose-Headers', 'New-Token') // Allows CORS requests to keep this header
+    }
   },
 }
