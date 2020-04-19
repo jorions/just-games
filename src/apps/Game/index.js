@@ -61,7 +61,8 @@ export default connect(mapStateToProps, (dispatch, props) => ({
     dispatch(submitAction({ id, action, data, onSuccess }))
   },
   reset: () => {
-    dispatch(reset())
+    const { id } = props
+    dispatch(reset(id))
   },
   clearErrors: () => {
     dispatch(clearErrors())

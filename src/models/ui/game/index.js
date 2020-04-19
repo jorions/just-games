@@ -15,8 +15,17 @@ const stopPollingForGame = () => {
   clearTimeout(poll)
 }
 
-export const reset = () => dispatch => {
+export const reset = id => (dispatch, getState) => {
+  const {
+    ui: {
+      game: { gameNotFound, invalidPassword, playerInGame, gameEnded },
+    },
+  } = getState()
   stopPollingForGame()
+  if (!gameNotFound && !invalidPassword && !playerInGame && !gameEnded)
+    axios
+      .post(`${SERVER_URL}/api/games/${id}/inactivePlayer`)
+      .catch(() => console.log('Error marking you inactive')) // eslint-disable-line no-console
   dispatch(actions.reset())
 }
 

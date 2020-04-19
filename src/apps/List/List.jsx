@@ -92,8 +92,8 @@ class List extends PureComponent {
             name="gameName"
             id="gameName"
             value={gameName}
-            placeholder="Game Name"
-            label="Game Name"
+            placeholder="New Game Name"
+            label="New Game Name"
             onChange={this.handleChange}
             fullWidth
           />

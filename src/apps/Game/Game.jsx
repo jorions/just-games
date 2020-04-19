@@ -27,7 +27,6 @@ class Game extends PureComponent {
   componentWillUnmount() {
     const { reset } = this.props
     reset()
-    // TODO: Submit request to mark user as inactive in game
   }
 
   handlePasswordChange = ({ target: { value } }) => {
@@ -99,15 +98,26 @@ class Game extends PureComponent {
               },
             ],
           },
-          // TODO: Add "Go Back" button, change other button to "Try again"
           {
             isOpen: playerInGame,
             title: "You're already in a game",
             content: "Wait a few seconds and you'll be cleared out of your old game",
-            onOKClick: () => {
-              clearErrors()
-              fetchGame()
-            },
+            buttons: [
+              {
+                value: 'Go Back',
+                color: 'secondary',
+                onClick: () => navigate('/'),
+                className: styles.goBackButton,
+              },
+              {
+                value: 'Try Again',
+                color: 'primary',
+                onClick: () => {
+                  clearErrors()
+                  fetchGame()
+                },
+              },
+            ],
           },
           {
             isOpen: pollingError,

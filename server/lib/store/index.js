@@ -31,7 +31,7 @@ const store = {
       addOrRefreshPlayer: fn
       refreshPlayer: fn
       markPlayerInactive: fn
-      removePlayer: fn
+      removePlayer: fn // TODO: This is unused
       getGame: fn
       submitAction: fn
     }
@@ -45,9 +45,10 @@ const store = {
     }
     */
   },
+  message: null, // TODO: Implement message endpoint
 }
 
-// Once every ten seconds, update players in games and delete empty games
+// Once every 10s, update players in games and delete empty games
 setInterval(() => {
   Object.entries(store.games).forEach(([gameId, { players }]) => {
     const now = Date.now()
@@ -55,7 +56,6 @@ setInterval(() => {
     Object.entries(players).forEach(([username, userGameInfo]) => {
       // If the player is currently active and hasn't polled in too long, mark inactive for game
       if (userGameInfo.isActive && now - userGameInfo.lastPolled > MAX_TIME_BEFORE_INACTIVE_IN_MS) {
-        // TODO: Inactive players too frequently
         store.games[gameId].markPlayerInactive(username)
       }
       if (store.games[gameId].players[username].isActive) deleteGame = false
@@ -118,10 +118,14 @@ const createGame = ({ gameType, gameName, password, username }) => {
 
 const getGames = username => {
   refreshUser(username)
-  return Object.entries(store.games).map(([id, { type, password, getGame }]) => {
-    const { owner, name, players } = getGame()
-    return { type, owner, name, passwordRequired: !!password, players: Object.keys(players), id }
-  })
+  return Object.entries(store.games).map(([id, { type, owner, name, password, players }]) => ({
+    type,
+    owner,
+    name,
+    passwordRequired: !!password,
+    players: Object.keys(players),
+    id,
+  }))
 }
 
 // TODO: On first fetch of game do isInAnotherGame check.
@@ -168,6 +172,13 @@ const submitAction = ({ id, username, action, data }) => {
   refreshUser(username)
 }
 
+const markPlayerInactive = (id, username) => {
+  const game = store.games[id]
+  if (!game) throw new ValidationError('Game not found', GAME_NOT_FOUND)
+
+  if (game.players[username]) game.markPlayerInactive(username)
+}
+
 module.exports = {
   logIn,
   createGame,
@@ -175,6 +186,7 @@ module.exports = {
   getGame,
   deleteGame,
   submitAction,
+  markPlayerInactive,
   ...structs,
   validationErrors: {
     ACCOUNT_TAKEN,

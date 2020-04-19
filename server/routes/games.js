@@ -186,4 +186,30 @@ router.post('/:id/action', parseAndRefreshAuth, ({ request, response, state, cap
   }
 })
 
+/**
+ * Responds
+ *  201: OK
+ *  404: Not found
+ *    error: { message: 'That game does not exist', code: 'gameNotFound' }
+ *  500: Server error
+ *    error: { message: 'Something broke while attempting to mark you inactive' }
+ */
+router.post('/:id/inactivePlayer', parseAndRefreshAuth, ({ response, state, captures: [id] }) => {
+  try {
+    store.markPlayerInactive(id, state.username)
+
+    response.status = 201
+  } catch (err) {
+    const options = {
+      [store.validationErrors.GAME_NOT_FOUND]: {
+        status: 404,
+        message: 'That game does not exist',
+      },
+      defaultMessage: 'Something broke while attempting to mark you inactive',
+    }
+
+    handleError({ response, state, err, options })
+  }
+})
+
 module.exports = router
