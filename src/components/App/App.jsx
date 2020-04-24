@@ -4,6 +4,7 @@ import { hot } from 'react-hot-loader/root'
 import { Router, Redirect } from '@reach/router'
 
 import { logIn, logOut, game } from 'routes'
+import style from 'lib/style'
 
 import Game from 'apps/Game'
 import List from 'apps/List'
@@ -37,8 +38,8 @@ class App extends PureComponent {
     const { collapsed } = this.state
     return (
       <ErrorBoundary>
-        <Nav collapsed={collapsed} toggleCollapse={this.toggleCollapse} />
-        <div className={className} styleName="appContainer">
+        {loggedIn && <Nav collapsed={collapsed} toggleCollapse={this.toggleCollapse} />}
+        <div className={className} styleName={style({ appContainer: true, loggedOut: !loggedIn })}>
           <Router>
             <ConditionalRedirect
               path="/"

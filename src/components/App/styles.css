@@ -5,14 +5,21 @@
 }
 @media not all and (max-width: 840px) {
   .appContainer {
+    height: 100vh;
+  }
+  .appContainer:not(.loggedOut) {
     width: calc(100vw - var(--nav-non-mobile-width));
     margin-left: var(--nav-non-mobile-width);
-    height: 100vh;
+  }
+  .appContainer.loggedOut {
+    width: 100%;
   }
 }
 @media (max-width: 840px) {
   .appContainer {
     width: 100vw;
+  }
+  .appContainer:not(.loggedOut) {
     padding-bottom: var(--nav-mobile-height);
   }
 }

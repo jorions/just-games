@@ -62,47 +62,48 @@ class LogIn extends PureComponent {
 
     return (
       <>
-        <div styleName="container" className="flex-centered ph4 mb4">
+        <div styleName="container" className="flex-centered ph4">
           <KeyPressListener onKeyPress={this.handleSubmit} enterKey />
-          <div className="w-100 center mb4">
-            <div className="inline-block w-100 mb3">
-              <Typography variant="h4">Just games. Plain and simple.</Typography>
+          <div>
+            <div className="w-100 center mb4">
+              <div className="inline-block w-100 mb3">
+                <Typography variant="h4">Just games. Plain and simple.</Typography>
+              </div>
+              <div className="inline-block w-100">
+                <Typography variant="h6">Pick a username and start playing</Typography>
+              </div>
             </div>
-            <div className="inline-block w-100">
-              <Typography variant="h6">Pick a username and start playing</Typography>
-            </div>
-          </div>
-          <div styleName="form">
-            {this.renderErrorModal()}
-            <TextInput
-              name="username"
-              value={username}
-              placeholder="Username"
-              label="Username"
-              fullWidth
-              onChange={this.handleChange}
-            />
-            <div className="mv4 flex-centered h4">
-              {logInLoading ? (
-                <div className="w4 h4">
-                  <Spinner />
+            <div className="flex-centered">
+              <div styleName="form">
+                {this.renderErrorModal()}
+                <TextInput
+                  name="username"
+                  value={username}
+                  placeholder="Username"
+                  fullWidth
+                  onChange={this.handleChange}
+                />
+                <div className="mv4 h4">
+                  {logInLoading ? (
+                    <div className="w4 h4">
+                      <Spinner />
+                    </div>
+                  ) : (
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="secondary"
+                      name="logIn"
+                      onClick={this.handleSubmit}
+                      disabled={disableButton}
+                      fullWidth
+                      className="mb3"
+                    >
+                      Start Playing
+                    </Button>
+                  )}
                 </div>
-              ) : (
-                <>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="secondary"
-                    name="logIn"
-                    onClick={this.handleSubmit}
-                    disabled={disableButton}
-                    fullWidth
-                    className="mb3"
-                  >
-                    Start Playing
-                  </Button>
-                </>
-              )}
+              </div>
             </div>
           </div>
         </div>
