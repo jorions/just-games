@@ -138,14 +138,9 @@ class CAH {
     if (username === this.czar) {
       // If the status is WINNER, then the round will move on after setTimeout automatically
       if (this.status !== WINNER) this.moveToNextRound()
-    } else {
-      // Otherwise remove the player's played cards, if any
-      const playedCardsIdx = this.playedCardsThisRound.findIndex(
-        ({ player }) => player === username,
-      )
-      if (playedCardsIdx !== -1) this.playedCardsThisRound.splice(playedCardsIdx, 1)
+    } else if (this.status === PLAYERS_SUBMITTING) {
       // TODO: If only the czar and 1 player are in, and player goes inactive, the game it goes into a weird state
-      if (this.status === PLAYERS_SUBMITTING) this.moveToPickingWinnerIfAllHavePlayed()
+      this.moveToPickingWinnerIfAllHavePlayed()
     }
   }
 
@@ -222,7 +217,8 @@ class CAH {
       }
     } else {
       const cards = []
-      for (let i = 0; i < 7; i += 1) {
+      // TODO: Move to 7 cards with swapping
+      for (let i = 0; i < 10; i += 1) {
         cards.push(this.getNextWhiteCard())
       }
       this.players[username] = {

@@ -13,7 +13,7 @@ const INVALID_GAME_TYPE = 'invalidGameType'
 const UNAUTHORIZED = 'unauthorized'
 
 // TODO: Increase time and move to owner booting people/marking inactive
-const MAX_TIME_BEFORE_INACTIVE_IN_MS = 1000 * 120 // 120s
+const MAX_TIME_BEFORE_INACTIVE_IN_MS = 1000 * 20 // 20s
 const MAX_TIME_BEFORE_DELETE_IN_MS = 1000 * 60 * 60 * 24 // 1d
 
 const store = {
