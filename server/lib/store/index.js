@@ -12,7 +12,8 @@ const INVALID_PASSWORD = 'invalidPassword'
 const INVALID_GAME_TYPE = 'invalidGameType'
 const UNAUTHORIZED = 'unauthorized'
 
-const MAX_TIME_BEFORE_INACTIVE_IN_MS = 1000 * 20 // 20s
+// TODO: Increase time and move to owner booting people/marking inactive
+const MAX_TIME_BEFORE_INACTIVE_IN_MS = 1000 * 120 // 120s
 const MAX_TIME_BEFORE_DELETE_IN_MS = 1000 * 60 * 60 * 24 // 1d
 
 const store = {
@@ -183,7 +184,9 @@ const submitAction = ({ id, username, action, data }) => {
 
   if (!game.players[username]) throw new ValidationError('Unauthorized', UNAUTHORIZED)
 
-  game.submitAction({ username, action, data })
+  game.submitAction({ username, action, data }, () => {
+    game.lastUpdated = Date.now()
+  })
   game.refreshPlayer(username)
 
   refreshUser(username)

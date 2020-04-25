@@ -145,13 +145,13 @@ class CAH {
       )
       if (playedCardsIdx !== -1) this.playedCardsThisRound.splice(playedCardsIdx, 1)
       // TODO: If only the czar and 1 player are in, and player goes inactive, the game it goes into a weird state
-      this.moveToPickingWinnerIfAllHavePlayed()
+      if (this.status === PLAYERS_SUBMITTING) this.moveToPickingWinnerIfAllHavePlayed()
     }
   }
 
   /* ---------------------------- Player actions ---------------------------- */
 
-  pickWinner(username, pickedWinnerIdx) {
+  pickWinner(username, pickedWinnerIdx, updateGame) {
     // Confirm submitter is the czar
     if (this.czar !== username) throw new Error('notCzar')
     // Confirm game is in proper phase
@@ -172,6 +172,7 @@ class CAH {
       // Give winner the black card
       winningPlayer.winningCards.push(this.prompt)
       this.moveToNextRound()
+      updateGame()
     }, ROUND_COOLDOWN_IN_MS)
   }
 
@@ -253,11 +254,11 @@ class CAH {
     this.handlePlayerDrop(username)
   }
 
-  submitAction = ({ username, action, data }) => {
+  submitAction = ({ username, action, data }, updateGame) => {
     const { actions } = games[gameNames.CAH]
     const actionMap = {
       [actions.SUBMIT_CARDS]: (...args) => this.submitCards(...args),
-      [actions.PICK_WINNER]: (...args) => this.pickWinner(...args),
+      [actions.PICK_WINNER]: (...args) => this.pickWinner(...args, updateGame),
     }
     actionMap[action](username, data)
   }
