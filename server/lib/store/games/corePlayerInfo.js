@@ -20,9 +20,8 @@ module.exports = {
       acc[username] = player
       return acc
     }, {}),
-  getCoreInfo: ({ isActive, lastPolled, timeJoined }) => ({
+  getStatusInfo: ({ isActive, timeJoined }) => ({
     isActive,
-    lastPolled,
     timeJoined,
   }),
 }

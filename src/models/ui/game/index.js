@@ -15,6 +15,11 @@ const stopPollingForGame = () => {
   clearTimeout(poll)
 }
 
+export const markPlayerInactive = id =>
+  axios
+    .post(`${SERVER_URL}/api/games/${id}/inactivePlayer`)
+    .catch(() => console.log('Error marking you inactive')) // eslint-disable-line no-console
+
 export const reset = id => (dispatch, getState) => {
   const {
     ui: {
@@ -22,10 +27,7 @@ export const reset = id => (dispatch, getState) => {
     },
   } = getState()
   stopPollingForGame()
-  if (!gameNotFound && !invalidPassword && !playerInGame && !gameEnded)
-    axios
-      .post(`${SERVER_URL}/api/games/${id}/inactivePlayer`)
-      .catch(() => console.log('Error marking you inactive')) // eslint-disable-line no-console
+  if (!gameNotFound && !invalidPassword && !playerInGame && !gameEnded) markPlayerInactive(id)
   dispatch(actions.reset())
 }
 
@@ -41,6 +43,9 @@ export const fetchGame = ({ id, password, onSuccess, isPoll = false }) => async 
 ) => {
   const {
     user: { username },
+    ui: {
+      game: { game },
+    },
   } = getState()
 
   if (!username) return // Avoid fetching if we log out while polling
@@ -52,10 +57,13 @@ export const fetchGame = ({ id, password, onSuccess, isPoll = false }) => async 
 
   try {
     const {
-      data: { game },
-    } = await axios.get(`${SERVER_URL}/api/games/${id}`, isPoll ? {} : { params: { password } }) // Send username on first fetch to add user to game
+      data: { game: updatedGame },
+    } = await axios.get(
+      `${SERVER_URL}/api/games/${id}`,
+      isPoll ? { params: { lastUpdated: game.lastUpdated } } : { params: { password } },
+    )
     if (onSuccess) onSuccess()
-    dispatch(actions.fetchGameSuccess(formatGame(game, username)))
+    if (updatedGame) dispatch(actions.fetchGameSuccess(formatGame(updatedGame, username)))
     poll = setTimeout(() => dispatch(fetchGame({ id, isPoll: true })), 2500)
   } catch (err) {
     dispatch(
@@ -64,10 +72,10 @@ export const fetchGame = ({ id, password, onSuccess, isPoll = false }) => async 
         404: () => {
           const {
             ui: {
-              game: { game },
+              game: { game: currentGame },
             },
           } = getState()
-          return game ? actions.gameEnded() : actions.gameNotFound()
+          return currentGame ? actions.gameEnded() : actions.gameNotFound()
         },
         409: actions.playerInGame,
         defaultHandler: data =>

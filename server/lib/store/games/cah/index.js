@@ -282,7 +282,7 @@ class CAH {
           acc[u] = {
             winningCards: info.winningCards,
             submitted: info.submitted,
-            ...corePlayerInfo.getCoreInfo(info),
+            ...corePlayerInfo.getStatusInfo(info),
           }
         return acc
       }, {}),

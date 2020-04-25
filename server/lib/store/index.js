@@ -22,6 +22,7 @@ const store = {
       type: String
       password: String
       owner: String
+      lastUpdated: ISO String
       players: {
         [username]: {
           isActive: Bool
@@ -57,6 +58,7 @@ setInterval(() => {
       // If the player is currently active and hasn't polled in too long, mark inactive for game
       if (userGameInfo.isActive && now - userGameInfo.lastPolled > MAX_TIME_BEFORE_INACTIVE_IN_MS) {
         store.games[gameId].markPlayerInactive(username)
+        store.games[gameId].lastUpdated = Date.now()
       }
       if (store.games[gameId].players[username].isActive) deleteGame = false
     })
@@ -108,6 +110,7 @@ const createGame = ({ gameType, gameName, password, username }) => {
   store.games[id] = {
     type: gameType,
     password,
+    lastUpdated: Date.now(),
     ...new games[gameType](gameName, username),
   }
 
@@ -128,25 +131,39 @@ const getGames = username => {
   }))
 }
 
-// TODO: On first fetch of game do isInAnotherGame check.
-// TODO: On subsequent fetches make sure user is already in game.
-
-const getGame = ({ id, username, password }) => {
+// isUserReq = false when coming from submitAction
+const getGame = ({ id, username, password, lastUpdated, isUserReq = true }) => {
   const game = store.games[id]
   if (!game) throw new ValidationError('Game not found', GAME_NOT_FOUND)
 
-  const playerIsInAnotherGame = getAllActiveUsernamesInGames(id).some(u => u === username)
-  if (playerIsInAnotherGame)
-    throw new ValidationError('Player is already in a game', PLAYER_IN_GAME)
+  const player = game.players[username]
+  const isFirstGet = !player
+  let returnGame = true
 
-  if (!game.players[username] && game.password && game.password !== password)
-    throw new ValidationError('Invalid password', INVALID_PASSWORD)
+  if (isUserReq) {
+    if (isFirstGet) {
+      if (game.password && game.password !== password)
+        throw new ValidationError('Invalid password', INVALID_PASSWORD)
+      const playerIsInAnotherGame = getAllActiveUsernamesInGames(id).some(u => u === username)
+      if (playerIsInAnotherGame)
+        throw new ValidationError('Player is already in a game', PLAYER_IN_GAME)
+      // Player is joining the game, so update
+      game.lastUpdated = Date.now()
+    } else {
+      if (!player.isActive) {
+        // Player is becoming active again, so update
+        game.lastUpdated = Date.now()
+      }
+      returnGame = game.lastUpdated !== Number(lastUpdated)
+    }
 
-  game.addOrRefreshPlayer(username)
+    game.addOrRefreshPlayer(username)
+    refreshUser(username)
+  }
 
-  refreshUser(username)
-
-  return { type: game.type, ...game.getGame(username) }
+  return returnGame
+    ? { type: game.type, lastUpdated: game.lastUpdated, ...game.getGame(username) }
+    : null
 }
 
 const deleteGame = (id, username) => {
@@ -170,13 +187,18 @@ const submitAction = ({ id, username, action, data }) => {
   game.refreshPlayer(username)
 
   refreshUser(username)
+
+  game.lastUpdated = Date.now()
 }
 
 const markPlayerInactive = (id, username) => {
   const game = store.games[id]
   if (!game) throw new ValidationError('Game not found', GAME_NOT_FOUND)
 
-  if (game.players[username]) game.markPlayerInactive(username)
+  if (game.players[username]) {
+    game.markPlayerInactive(username)
+    game.lastUpdated = Date.now()
+  }
 }
 
 module.exports = {

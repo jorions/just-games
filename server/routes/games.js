@@ -28,7 +28,7 @@ router.get('/', parseAndRefreshAuth, ({ response, state }) => {
 /**
  * Responds
  *  200: OK
- *    game: Game
+ *    game: Game || null (if not updated)
  *  401: Unauthorized
  *    error: { message: 'You entered the wrong password', code: 'invalidPassword' }
  *  404: Not found
@@ -41,13 +41,13 @@ router.get('/', parseAndRefreshAuth, ({ response, state }) => {
 router.get('/:id', parseAndRefreshAuth, ({ request, response, state, captures: [id] }) => {
   try {
     const {
-      query: { password },
+      query: { password, lastUpdated },
     } = request
 
     state.responseBodyMaxLoggingLen = 10 // eslint-disable-line no-param-reassign
 
     response.body = {
-      game: store.getGame({ id, password, username: state.username }),
+      game: store.getGame({ id, password, username: state.username, lastUpdated }),
     }
     response.status = 200
   } catch (err) {
@@ -167,7 +167,7 @@ router.post('/:id/action', parseAndRefreshAuth, ({ request, response, state, cap
 
     store.submitAction({ id, username: state.username, action, data })
 
-    response.body = { game: store.getGame({ id, username: state.username }) }
+    response.body = { game: store.getGame({ id, username: state.username, isUserReq: false }) }
     response.status = 201
   } catch (err) {
     const options = {

@@ -44,7 +44,7 @@ const Nav = ({ loggedIn, className, collapsed, logOut }) => (
 Nav.propTypes = {
   loggedIn: PropTypes.bool.isRequired,
   className: PropTypes.string.isRequired,
-  collapsed: PropTypes.bool.isRequired,
+  collapsed: PropTypes.bool.isRequired, // TODO: Use this
   logOut: PropTypes.func.isRequired,
 }
 
