@@ -88,7 +88,6 @@ class CAH extends PureComponent {
   renderPlayer(p) {
     const { username, czar, status } = this.props
 
-    const isPlayer = username === p.username
     let statusText = p.submitted ? 'Played' : 'Submitting'
     if (status.key === PICKING_WINNER && !p.submitted) statusText = 'Waiting to play' // Player joined during winner picking
     if (!p.isActive) statusText = 'Inactive'
@@ -97,9 +96,13 @@ class CAH extends PureComponent {
     return (
       <div
         key={p.username}
-        styleName={style({ czar: czar === p.username, player: isPlayer, inactive: !p.isActive })}
+        styleName={style({
+          czar: czar === p.username,
+          player: username === p.username,
+          inactive: !p.isActive,
+        })}
       >
-        <Typography variant="body2">{isPlayer ? 'You' : p.username}</Typography>
+        <Typography variant="body2">{p.username}</Typography>
         <Typography variant="body2">{p.winningCards.length}</Typography>
         {czar === p.username ? (
           <Typography variant="caption" className="green">
