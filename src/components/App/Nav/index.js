@@ -25,7 +25,7 @@ const mapStateToProps = ({
 
 export default connect(mapStateToProps, (dispatch, ownProps) => ({
   logOut: () => {
-    if (ownProps.game) markPlayerInactive(ownProps.game.id)
+    if (ownProps.game) markPlayerInactive(ownProps.game.id, true)
     setTimeout(() => dispatch(logOut()), 0) // Wait until the next cycle to remove user
   },
 }))(Nav)

@@ -17,10 +17,10 @@ const stopPollingForGame = () => {
   clearTimeout(poll)
 }
 
-export const markPlayerInactive = id => {
+export const markPlayerInactive = (id, postToken = false) => {
   const { token } = getUser()
   axios
-    .post(`${SERVER_URL}/api/games/${id}/inactivePlayer`, { token })
+    .post(`${SERVER_URL}/api/games/${id}/inactivePlayer`, postToken ? { token } : {})
     .catch(() => console.log('Error marking you inactive')) // eslint-disable-line no-console
 }
 

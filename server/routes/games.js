@@ -227,7 +227,7 @@ router.post(
         body: { token },
       } = request
 
-      const username = token ? await parseAndVerify(token).username : state.username
+      const username = token ? (await parseAndVerify(state.log, token)).username : state.username
 
       store.markPlayerInactive(id, username)
 
