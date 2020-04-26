@@ -279,7 +279,7 @@ class Game extends PureComponent {
         {this.renderInteractionModal()}
         <div className={className}>
           <div styleName="buttonContainer">
-            <div styleName="delete">
+            <div>
               <IconButton onClick={this.handleInstructionsClick}>
                 <HelpIcon classes={{ root: styles.icon }} />
               </IconButton>
@@ -290,7 +290,7 @@ class Game extends PureComponent {
           </div>
           <div styleName="buttonContainer">
             {isOwner && (
-              <div styleName="delete">
+              <div>
                 <IconButton onClick={this.handleDeleteClick}>
                   <DeleteIcon classes={{ root: styles.icon }} />
                 </IconButton>
