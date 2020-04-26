@@ -3,6 +3,7 @@ import { getUser } from 'lib/storage'
 import handleError from 'models/helpers/handleError'
 import { setMessage } from 'models/message'
 import * as actions from './actions'
+import formatGame from './formatGame'
 
 export { default } from './reducer'
 
@@ -35,12 +36,6 @@ export const reset = id => (dispatch, getState) => {
   dispatch(actions.reset())
 }
 
-const formatGame = (game, username) => ({
-  ...game,
-  players: Object.entries(game.players).map(([u, info]) => ({ username: u, ...info })),
-  yourCards: game.players[username].cards,
-})
-
 export const fetchGame = ({ id, password, onSuccess, isPoll = false }) => async (
   dispatch,
   getState,
@@ -67,7 +62,8 @@ export const fetchGame = ({ id, password, onSuccess, isPoll = false }) => async 
       isPoll ? { params: { lastUpdated: game.lastUpdated } } : { params: { password } },
     )
     if (onSuccess) onSuccess()
-    if (updatedGame) dispatch(actions.fetchGameSuccess(formatGame(updatedGame, username)))
+    if (updatedGame)
+      dispatch(actions.fetchGameSuccess(formatGame[updatedGame.type](updatedGame, username)))
     dispatch(setMessage(message))
     poll = setTimeout(() => dispatch(fetchGame({ id, isPoll: true })), 2500)
   } catch (err) {
@@ -114,7 +110,7 @@ export const submitAction = ({ id, action, data, onSuccess }) => async (dispatch
       action,
       data,
     })
-    dispatch(actions.submitActionSuccess(formatGame(game, username)))
+    dispatch(actions.submitActionSuccess(formatGame[game.type](game, username)))
     if (onSuccess) onSuccess()
     setTimeout(() => dispatch(fetchGame({ id, isPoll: true })), 2500)
   } catch (err) {

@@ -16,6 +16,7 @@ module.exports = {
       actions: {
         SUBMIT_CARDS: 'submitCards',
         PICK_WINNER: 'pickWinner',
+        SWAP_CARDS: 'swapCards',
       },
     },
   },

@@ -5,7 +5,7 @@ import CAH from './CAH'
 const mapStateToProps = ({
   ui: {
     game: {
-      game: { status, czar, prompt, playedCardsThisRound, yourCards, players },
+      game: { status, czar, prompt, playedCardsThisRound, yourCards, remainingSwaps, players },
       submitActionLoading,
     },
   },
@@ -16,6 +16,7 @@ const mapStateToProps = ({
   prompt,
   playedCardsThisRound,
   yourCards,
+  remainingSwaps,
   players,
   username,
   isCzar: czar === username,

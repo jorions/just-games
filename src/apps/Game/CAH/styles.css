@@ -158,3 +158,11 @@
 .yourCards {
   margin-bottom: 1rem;
 }
+
+.swap {
+  background-color: var(--green);
+  height: 60px;
+}
+.swap.disabled {
+  background-color: var(--blue);
+}

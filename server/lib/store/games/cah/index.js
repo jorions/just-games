@@ -173,8 +173,6 @@ class CAH {
 
   submitCards(username, playedCards) {
     const player = this.players[username]
-    // Confirm player exists
-    if (!player) throw new Error('playerDoesNotExist')
     // Confirm game is in proper phase
     if (this.status.key !== PLAYERS_SUBMITTING) throw new Error('invalidGameStatus')
     // Confirm submitter is not czar
@@ -202,6 +200,24 @@ class CAH {
     this.moveToPickingWinnerIfAllHavePlayed()
   }
 
+  swapCards(username, swappedCards) {
+    const player = this.players[username]
+    // Confirm player can swap cards
+    if (player.remainingSwaps < swappedCards.length) throw new Error('tooManySwaps')
+    // Confirm player owns cards and remove from hand
+    const playerCards = player.cards
+    swappedCards.forEach(playedCard => {
+      const playedCardIdx = playerCards.findIndex(c => c === playedCard)
+      if (playedCardIdx === -1) throw new Error('wrongCards')
+      playerCards.splice(playedCardIdx, 1)
+    })
+    // Add new cards to player hand
+    for (let i = 0; i < swappedCards.length; i += 1) {
+      playerCards.push(this.getNextWhiteCard())
+    }
+    player.remainingSwaps -= swappedCards.length
+  }
+
   /*
   ==============================================================================
   ============================== PUBLIC METHODS ================================
@@ -217,14 +233,14 @@ class CAH {
       }
     } else {
       const cards = []
-      // TODO: Move to 7 cards with swapping
-      for (let i = 0; i < 10; i += 1) {
+      for (let i = 0; i < 7; i += 1) {
         cards.push(this.getNextWhiteCard())
       }
       this.players[username] = {
         cards,
         winningCards: [],
         submitted: false,
+        remainingSwaps: 7,
         ...corePlayerInfo.add(),
       }
     }
@@ -255,6 +271,7 @@ class CAH {
     const actionMap = {
       [actions.SUBMIT_CARDS]: (u, d) => this.submitCards(u, d),
       [actions.PICK_WINNER]: (u, d) => this.pickWinner(u, d, updateGame),
+      [actions.SWAP_CARDS]: (u, d) => this.swapCards(u, d),
     }
     actionMap[action](username, data)
   }

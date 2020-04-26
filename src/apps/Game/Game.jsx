@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import IconButton from '@material-ui/core/IconButton'
+import Typography from '@material-ui/core/Typography'
 import DeleteIcon from '@material-ui/icons/Delete'
 import HelpIcon from '@material-ui/icons/HelpOutline'
 import { Redirect } from '@reach/router'
@@ -178,32 +179,34 @@ class Game extends PureComponent {
     switch (type) {
       case gameNames.CAH:
         return (
-          <div>
-            <div className="mb2">To quote the official page:</div>
-            <div className="mb2">
+          <>
+            <Typography className="mb2">To quote the official page:</Typography>
+            <Typography className="mb2">
               "Each round, one player asks a question from a black card, and everyone else answers
               with their funniest white card."
-            </div>
-            <div className="mb2">
+            </Typography>
+            <Typography className="mb2">
               The player asking the question is the "Czar". The Czar changes at the end of each
               round.
-            </div>
-            <div className="mb2">
-              When players pick their answer, it will require at least 1 card, but some black cards
-              call for multiple white cards.
-            </div>
-            <div className="mb2">
-              Simply click a white card to select it. Once you select all of the necessary cards,
-              click "Submit Your Card" at the top of the page.
-            </div>
-            <div className="mb2">
+            </Typography>
+            <Typography className="mb2">Black cards require 1 or more cards to answer.</Typography>
+            <Typography className="mb2">
+              To submit an answer, select all necessary white cards, then click "Submit Your Card"
+              at the top of the page.
+            </Typography>
+            <Typography className="mb2">
+              If you do not like some of your white cards, at any time you are able to swap out up
+              to 7 cards over the course of the game. Start the swapping process by clicking the
+              green button at the bottom of the page.
+            </Typography>
+            <Typography className="mb2">
               Once all players have submitted their cards, the Czar will pick their favorite answer.
-            </div>
-            <div className="mb2">
-              Simply click the cards to select them, then click "Submit Your Choice" at the top of
-              the page.
-            </div>
-          </div>
+            </Typography>
+            <Typography className="mb2">
+              To pick the winner, select the white card(s) you think are the best, then click
+              "Submit Your Choice" at the top of the page.
+            </Typography>
+          </>
         )
       default:
         return 'Instructions unavailable'
