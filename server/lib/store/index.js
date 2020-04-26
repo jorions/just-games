@@ -109,9 +109,13 @@ const getOverview = () => {
     const gameType = gamesOverview.data[type]
     const players = {}
     Object.entries(p).forEach(([username, { isActive, timeJoined, lastPolled }]) => {
-      players[username] = { isActive, timeJoined, lastPolled }
+      players[username] = {
+        isActive,
+        timeJoined: new Date(timeJoined),
+        lastPolled: new Date(lastPolled),
+      }
     })
-    const data = { id, name, owner, lastUpdated, players }
+    const data = { id, name, owner, lastUpdated: new Date(lastUpdated), players }
     if (gameType) {
       gameType.count += 1
       gameType.games.push(data)
@@ -134,7 +138,7 @@ const getOverview = () => {
   Object.entries(store.users).forEach(([username, { isActive, lastUpdated }]) => {
     const userType = usersOverview.data[isActive ? 'active' : 'inactive']
     userType.count += 1
-    userType.users.push({ username, lastUpdated })
+    userType.users.push({ username, lastUpdated: new Date(lastUpdated) })
     usersOverview.totalCount += 1
   })
 

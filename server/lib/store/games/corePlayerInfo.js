@@ -2,7 +2,7 @@
 
 module.exports = {
   add: () => {
-    const time = new Date()
+    const time = Date.now()
     return {
       isActive: true,
       timeJoined: time,
@@ -11,7 +11,7 @@ module.exports = {
   },
   refresh: () => ({
     isActive: true,
-    lastPolled: new Date(),
+    lastPolled: Date.now(),
   }),
   inactive: () => ({ isActive: false }),
   getActivePlayers: players =>
