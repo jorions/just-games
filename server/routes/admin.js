@@ -5,7 +5,7 @@ const { buildRouter } = require('effectsloop-server-utils')
 const handleError = require('./handleError')
 const store = require('../lib/store')
 
-const router = buildRouter('/api/message')
+const router = buildRouter('/api/admin')
 
 /**
  * Receives
@@ -17,12 +17,12 @@ const router = buildRouter('/api/message')
  *  500: Server error
  *    error: { message: 'Something broke while attempting to set the message' }
  */
-router.post('/', async ({ request, response, state }) => {
+router.post('/message', async ({ request, response, state }) => {
   const INVALID_PASSWORD = 'invalidPassword'
   try {
     const { message, password } = request.body
 
-    if (password !== process.env.MESSAGE_PASSWORD) {
+    if (password !== process.env.ADMIN_PASSWORD) {
       const err = new Error()
       err.code = INVALID_PASSWORD
       throw err
