@@ -22,7 +22,6 @@ class FormattedLink extends PureComponent {
   }
 }
 
-// TODO: Remove font awesome
 const renderLink = (to, icon, text, styleName = '', onClick = () => {}) => (
   <Button component={FormattedLink} to={to} styleName={styleName} onClick={onClick}>
     <div className="w4 inline-block">

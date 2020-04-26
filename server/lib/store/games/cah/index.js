@@ -139,7 +139,6 @@ class CAH {
       // If the status is WINNER, then the round will move on after setTimeout automatically
       if (this.status !== WINNER) this.moveToNextRound()
     } else if (this.status === PLAYERS_SUBMITTING) {
-      // TODO: If only the czar and 1 player are in, and player goes inactive, the game it goes into a weird state
       this.moveToPickingWinnerIfAllHavePlayed()
     }
   }

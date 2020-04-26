@@ -117,7 +117,6 @@ class CAH extends PureComponent {
     )
   }
 
-  // TODO: Cards shift down on mobile as people play
   renderPlayedCards = (usernameOrSet, idx) => {
     const { status, prompt, isCzar } = this.props
     const { winner } = this.state
@@ -226,6 +225,10 @@ class CAH extends PureComponent {
         >
           <Typography variant="h5">{this.renderStatusText()}</Typography>
         </div>
+        <div styleName="players">{players.map(p => this.renderPlayer(p))}</div>
+        <div className="hide-on-desktop" styleName="playedCards">
+          {playedCardsThisRound.map(this.renderPlayedCards)}
+        </div>
         <MCard styleName="blackCard">
           <Typography
             variant={blackCardFont}
@@ -242,8 +245,9 @@ class CAH extends PureComponent {
             </div>
           </div>
         </MCard>
-        <div styleName="playedCards">{playedCardsThisRound.map(this.renderPlayedCards)}</div>
-        <div styleName="players">{players.map(p => this.renderPlayer(p))}</div>
+        <div className="hide-on-mobile" styleName="playedCards">
+          {playedCardsThisRound.map(this.renderPlayedCards)}
+        </div>
         <div styleName="yourCards" className="flex-centered">
           {yourCards.map(this.renderYourCard)}
         </div>

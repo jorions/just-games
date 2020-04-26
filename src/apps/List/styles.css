@@ -63,7 +63,7 @@
     width: 100%;
   }
   .list > div {
-    width: 100% !important;
+    width: calc(100% - 2rem);
   }
 }
 

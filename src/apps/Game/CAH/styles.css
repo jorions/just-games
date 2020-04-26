@@ -27,7 +27,7 @@
 }
 @media (max-width: 480px) {
   .blackCard {
-    margin: 1rem auto 0;
+    margin: 1rem auto;
   }
 }
 
@@ -62,14 +62,25 @@
     height: 24rem; /* height of .blackCard */
   }
 }
+@media (max-width: 480px) {
+  .playedCards {
+    height: 12rem;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    width: 100%;
+  }
+}
 .playedCards > div {
   display: inline-block;
+  white-space: normal;
 }
 .playedCards > button {
   vertical-align: top;
   margin-bottom: 1rem;
   text-align: left;
   border-radius: 1rem;
+  white-space: normal;
 }
 .playedCards > div:last-child,
 .playedCards > button:last-child {
