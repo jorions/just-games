@@ -64,7 +64,7 @@
 }
 @media (max-width: 480px) {
   .playedCards {
-    height: 12rem;
+    height: 13rem;
     overflow-x: scroll;
     overflow-y: hidden;
     white-space: nowrap;
