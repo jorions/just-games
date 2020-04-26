@@ -21,6 +21,7 @@ const store = {
     /*
     [id]: {
       type: String
+      name: String
       password: String
       owner: String
       lastUpdated: ISO String
@@ -95,11 +96,55 @@ const getAllActiveUsernamesInGames = gameIdToFilter => {
   return activeUsers
 }
 
+//  ==== ADMIN FUNCTIONALITY ====
 const getMessage = () => store.message
 
 const setMessage = message => {
   store.message = message
 }
+
+const getOverview = () => {
+  const gamesOverview = { data: {}, totalCount: 0 }
+  Object.entries(store.games).forEach(([id, { type, name, owner, lastUpdated, players: p }]) => {
+    const gameType = gamesOverview.data[type]
+    const players = {}
+    Object.entries(p).forEach(([username, { isActive, timeJoined, lastPolled }]) => {
+      players[username] = { isActive, timeJoined, lastPolled }
+    })
+    const data = { id, name, owner, lastUpdated, players }
+    if (gameType) {
+      gameType.count += 1
+      gameType.games.push(data)
+    } else {
+      gamesOverview.data[type] = {
+        count: 1,
+        games: [data],
+      }
+    }
+    gamesOverview.totalCount += 1
+  })
+
+  const usersOverview = {
+    data: {
+      active: { count: 0, users: [] },
+      inactive: { count: 0, users: [] },
+    },
+    totalCount: 0,
+  }
+  Object.entries(store.users).forEach(([username, { isActive, lastUpdated }]) => {
+    const userType = usersOverview.data[isActive ? 'active' : 'inactive']
+    userType.count += 1
+    userType.users.push({ username, lastUpdated })
+    usersOverview.totalCount += 1
+  })
+
+  return {
+    games: gamesOverview,
+    users: usersOverview,
+    message: store.message,
+  }
+}
+// ==== END ADMIN FUNCTIONALITY ====
 
 const logIn = username => {
   const user = store.users[username]
@@ -222,6 +267,7 @@ module.exports = {
   logIn,
   getMessage,
   setMessage,
+  getOverview,
   createGame,
   getGames,
   getGame,

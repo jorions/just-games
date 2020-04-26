@@ -33,4 +33,19 @@ module.exports = {
       ctx.response.set('Access-Control-Expose-Headers', 'New-Token') // Allows CORS requests to keep this header
     }
   },
+  validateAdmin: (ctx, next) => {
+    const {
+      request: {
+        body: { password },
+      },
+    } = ctx
+
+    if (password !== process.env.ADMIN_PASSWORD) {
+      ctx.state.warning = 'Invalid admin password'
+      ctx.response.status = 403
+      return
+    }
+
+    next()
+  },
 }
