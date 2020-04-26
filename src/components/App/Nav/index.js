@@ -2,7 +2,6 @@ import { connect } from 'react-redux'
 
 import { gameNames } from 'shared/games'
 import { logOut } from 'models/globalActions'
-import { markPlayerInactive } from 'models/ui/game'
 
 import Nav from './Nav'
 
@@ -23,9 +22,4 @@ const mapStateToProps = ({
   className: game ? styleMap[game.type] : '',
 })
 
-export default connect(mapStateToProps, (dispatch, ownProps) => ({
-  logOut: () => {
-    if (ownProps.game) markPlayerInactive(ownProps.game.id, true)
-    setTimeout(() => dispatch(logOut()), 0) // Wait until the next cycle to remove user
-  },
-}))(Nav)
+export default connect(mapStateToProps, { logOut })(Nav)

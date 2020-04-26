@@ -4,8 +4,6 @@ const { buildRouter } = require('effectsloop-server-utils')
 
 const handleError = require('./handleError')
 const store = require('../lib/store')
-const { parseAndVerify } = require('../lib/jwt')
-
 const { parseAndRefreshAuth } = require('./middleware')
 
 const router = buildRouter('/api/games')
@@ -206,9 +204,6 @@ router.post('/:id/action', parseAndRefreshAuth, ({ request, response, state, cap
 })
 
 /**
- * Receives
- *  token: String
- *
  * Responds
  *  201: OK
  *  404: Not found
@@ -221,15 +216,9 @@ router.post('/:id/action', parseAndRefreshAuth, ({ request, response, state, cap
 router.post(
   '/:id/inactivePlayer',
   parseAndRefreshAuth,
-  async ({ request, response, state, captures: [id] }) => {
+  async ({ response, state, captures: [id] }) => {
     try {
-      const {
-        body: { token },
-      } = request
-
-      const username = token ? (await parseAndVerify(state.log, token)).username : state.username
-
-      store.markPlayerInactive(id, username)
+      store.markPlayerInactive(id, state.username)
 
       response.status = 201
     } catch (err) {

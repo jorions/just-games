@@ -34,7 +34,7 @@ const store = {
       addOrRefreshPlayer: fn
       refreshPlayer: fn
       markPlayerInactive: fn
-      removePlayer: fn // TODO: This is unused
+      removePlayer: fn
       getGame: fn
       submitAction: fn
     }
@@ -214,7 +214,7 @@ const getGame = ({ id, username, password, lastUpdated, isUserReq = true }) => {
   }
 
   return returnGame
-    ? { type: game.type, lastUpdated: game.lastUpdated, ...game.getGame(username) }
+    ? { id, type: game.type, lastUpdated: game.lastUpdated, ...game.getGame(username) }
     : null
 }
 
@@ -263,6 +263,16 @@ const markPlayerInactive = (id, username) => {
   }
 }
 
+const removeUser = (username, gameId) => {
+  delete store.users[username]
+  if (gameId) {
+    const game = store.games[gameId]
+    if (!game) throw new ValidationError('Game not found', GAME_NOT_FOUND)
+    game.removePlayer(username)
+    game.lastUpdated = Date.now()
+  }
+}
+
 module.exports = {
   logIn,
   getMessage,
@@ -275,6 +285,7 @@ module.exports = {
   deleteGame,
   submitAction,
   markPlayerInactive,
+  removeUser,
   ...structs,
   validationErrors: {
     ACCOUNT_TAKEN,
