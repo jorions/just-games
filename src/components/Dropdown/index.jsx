@@ -6,13 +6,7 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import PropTypes from 'prop-types'
 
-const currentYear = new Date().getFullYear()
-export const YEARS = ['']
-for (let i = 0; i <= 100; i += 1) {
-  YEARS.push(currentYear - i)
-}
-
-const Dropdown = ({ className, name, value, id, label, options, error, years, onChange }) => (
+const Dropdown = ({ className, name, value, id, label, options, error, onChange }) => (
   <FormControl className={className} error={error}>
     {label && <InputLabel htmlFor={id || `dropdown_${name}`}>{label}</InputLabel>}
     <Select
@@ -20,7 +14,7 @@ const Dropdown = ({ className, name, value, id, label, options, error, years, on
       onChange={onChange}
       input={<Input name={name} id={id || `dropdown_${name}`} />}
     >
-      {(years ? YEARS : options).map(option =>
+      {options.map(option =>
         typeof option === 'object' ? (
           <MenuItem key={`dropdown_${name}_${option.value}`} value={option.value}>
             {option.display}
@@ -52,7 +46,6 @@ Dropdown.propTypes = {
     ]),
   ),
   error: PropTypes.bool,
-  years: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
 }
 
@@ -62,7 +55,6 @@ Dropdown.defaultProps = {
   label: null,
   options: [],
   error: null,
-  years: false,
 }
 
 export default Dropdown
