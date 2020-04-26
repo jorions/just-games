@@ -14,7 +14,6 @@ export const logOut = () => (dispatch, getState) => {
       game: { game },
     },
   } = getState()
-  console.log(game)
   if (game && game.id) body.gameId = game.id
   axios
     .post(`${SERVER_URL}/api/users/logOut`, body)
