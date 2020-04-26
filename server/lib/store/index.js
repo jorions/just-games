@@ -11,6 +11,7 @@ const PLAYER_IN_GAME = 'playerInGame'
 const INVALID_PASSWORD = 'invalidPassword'
 const INVALID_GAME_TYPE = 'invalidGameType'
 const UNAUTHORIZED = 'unauthorized'
+const INVALID_ACTION = 'invalidAction'
 
 const MAX_TIME_BEFORE_INACTIVE_IN_MS = 1000 * 20 // 20s
 const MAX_TIME_BEFORE_DELETE_IN_MS = 1000 * 60 * 60 * 24 // 1d
@@ -117,7 +118,7 @@ const createGame = ({ gameType, gameName, password, username }) => {
     type: gameType,
     password,
     lastUpdated: Date.now(),
-    ...new games[gameType](gameName, username),
+    ...new games[gameType].Game(gameName, username),
   }
 
   refreshUser(username)
@@ -172,6 +173,14 @@ const getGame = ({ id, username, password, lastUpdated, isUserReq = true }) => {
     : null
 }
 
+const getGameStruct = (id, action) => {
+  const game = store.games[id]
+  if (!game) throw new ValidationError('Game not found', GAME_NOT_FOUND)
+  const struct = games[game.type].structs[action]
+  if (!struct) throw new ValidationError('Invalid action', INVALID_ACTION)
+  return struct
+}
+
 const deleteGame = (id, username) => {
   const game = store.games[id]
   if (!game) throw new ValidationError('Game not found', GAME_NOT_FOUND)
@@ -216,6 +225,7 @@ module.exports = {
   createGame,
   getGames,
   getGame,
+  getGameStruct,
   deleteGame,
   submitAction,
   markPlayerInactive,

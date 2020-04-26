@@ -158,6 +158,8 @@ router.delete('/:id', parseAndRefreshAuth, ({ response, state, captures: [id] })
  * Responds
  *  201: OK
  *    game: Game
+ *  400: Invalid info submitted
+ *    error: { message: "Invalid action", code: 'invalidAction' }
  *  401: Unauthorized
  *    error: { message: "You don't have permission to do that", code: 'unauthorized' }
  *  404: Not found
@@ -175,7 +177,8 @@ router.post('/:id/action', parseAndRefreshAuth, ({ request, response, state, cap
       body: { action, data },
     } = request
 
-    // TODO: Validate input
+    const ActionStruct = store.getGameStruct(id, action)
+    ActionStruct({ data })
 
     store.submitAction({ id, username: state.username, action, data })
 
@@ -183,6 +186,10 @@ router.post('/:id/action', parseAndRefreshAuth, ({ request, response, state, cap
     response.status = 201
   } catch (err) {
     const options = {
+      [store.validationErrors.INVALID_ACTION]: {
+        status: 400,
+        message: 'Invalid action',
+      },
       [store.validationErrors.UNAUTHORIZED]: {
         status: 401,
         message: "You don't have permission to do that",

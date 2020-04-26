@@ -4,6 +4,7 @@ const { gameNames, games } = require('../../../../../shared/games')
 const shuffle = require('../../../shuffle')
 const corePlayerInfo = require('../corePlayerInfo')
 const startingCards = require('./cards')
+const structs = require('./structs')
 
 const { PICKING_WINNER, WINNER, PLAYERS_SUBMITTING } = games[gameNames.CAH].statuses
 
@@ -252,8 +253,8 @@ class CAH {
   submitAction = ({ username, action, data }, updateGame) => {
     const { actions } = games[gameNames.CAH]
     const actionMap = {
-      [actions.SUBMIT_CARDS]: (...args) => this.submitCards(...args),
-      [actions.PICK_WINNER]: (...args) => this.pickWinner(...args, updateGame),
+      [actions.SUBMIT_CARDS]: (u, d) => this.submitCards(u, d),
+      [actions.PICK_WINNER]: (u, d) => this.pickWinner(u, d, updateGame),
     }
     actionMap[action](username, data)
   }
@@ -286,4 +287,4 @@ class CAH {
   }
 }
 
-module.exports = CAH
+module.exports = { Game: CAH, structs }
