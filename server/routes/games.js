@@ -14,12 +14,15 @@ const router = buildRouter('/api/games')
  * Responds
  *  200: OK
  *    games: [Game]
+ *    message: String || null
  *  500: Server error
  *    error: { message: 'Something broke while attempting to fetch games' }
+ *
+ *  403: Unauthorized
  */
 router.get('/', parseAndRefreshAuth, ({ response, state }) => {
   try {
-    response.body = { games: store.getGames(state.username) }
+    response.body = { games: store.getGames(state.username), message: store.getMessage() }
     response.status = 200
   } catch (err) {
     handleError({ response, state, err, msg: 'Something broke while attempting to fetch games' })
@@ -30,6 +33,7 @@ router.get('/', parseAndRefreshAuth, ({ response, state }) => {
  * Responds
  *  200: OK
  *    game: Game || null (if not updated)
+ *    message: String || null
  *  401: Unauthorized
  *    error: { message: 'You entered the wrong password', code: 'invalidPassword' }
  *  404: Not found
@@ -38,6 +42,8 @@ router.get('/', parseAndRefreshAuth, ({ response, state }) => {
  *    error: { message: 'Player is already in a game', code: 'playerInGame' }
  *  500: Server error
  *    error: { message: 'Something broke while attempting to fetch the game' }
+ *
+ *  403: Unauthorized
  */
 router.get('/:id', parseAndRefreshAuth, ({ request, response, state, captures: [id] }) => {
   try {
@@ -49,6 +55,7 @@ router.get('/:id', parseAndRefreshAuth, ({ request, response, state, captures: [
 
     response.body = {
       game: store.getGame({ id, password, username: state.username, lastUpdated }),
+      message: store.getMessage(),
     }
     response.status = 200
   } catch (err) {
@@ -88,6 +95,7 @@ router.get('/:id', parseAndRefreshAuth, ({ request, response, state, captures: [
  *
  *  400: Invalid info submitted (generic)
  *    error: { message: Missing or incorrectly formatted data, fields: { ... } }
+ *  403: Unauthorized
  */
 router.post('/', parseAndRefreshAuth, ({ request, response, state }) => {
   try {
@@ -121,6 +129,8 @@ router.post('/', parseAndRefreshAuth, ({ request, response, state }) => {
  *    error: { message: "You don't have permission to do that", code: 'unauthorized' }
  *  500: Server error
  *    error: { message: 'Something broke while attempting to delete the game' }
+ *
+ *  403: Unauthorized
  */
 router.delete('/:id', parseAndRefreshAuth, ({ response, state, captures: [id] }) => {
   try {
@@ -157,6 +167,7 @@ router.delete('/:id', parseAndRefreshAuth, ({ response, state, captures: [id] })
  *
  *  400: Invalid info submitted (generic)
  *    error: { message: Missing or incorrectly formatted data, fields: { ... } }
+ *  403: Unauthorized
  */
 router.post('/:id/action', parseAndRefreshAuth, ({ request, response, state, captures: [id] }) => {
   try {
@@ -197,6 +208,8 @@ router.post('/:id/action', parseAndRefreshAuth, ({ request, response, state, cap
  *    error: { message: 'That game does not exist', code: 'gameNotFound' }
  *  500: Server error
  *    error: { message: 'Something broke while attempting to mark you inactive' }
+ *
+ *  403: Unauthorized
  */
 router.post(
   '/:id/inactivePlayer',

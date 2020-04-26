@@ -46,7 +46,7 @@ const store = {
     }
     */
   },
-  message: null, // TODO: Implement message endpoint
+  message: null,
 }
 
 // Once every 10s, update players in games and delete empty games
@@ -92,6 +92,12 @@ const getAllActiveUsernamesInGames = gameIdToFilter => {
         .forEach(([username]) => activeUsers.push(username)),
     )
   return activeUsers
+}
+
+const getMessage = () => store.message
+
+const setMessage = message => {
+  store.message = message
 }
 
 const logIn = username => {
@@ -205,6 +211,8 @@ const markPlayerInactive = (id, username) => {
 
 module.exports = {
   logIn,
+  getMessage,
+  setMessage,
   createGame,
   getGames,
   getGame,

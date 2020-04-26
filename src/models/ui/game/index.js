@@ -1,6 +1,7 @@
 import axios from 'lib/axios'
 import { getUser } from 'lib/storage'
 import handleError from 'models/helpers/handleError'
+import { setMessage } from 'models/message'
 import * as actions from './actions'
 
 export { default } from './reducer'
@@ -60,13 +61,14 @@ export const fetchGame = ({ id, password, onSuccess, isPoll = false }) => async 
 
   try {
     const {
-      data: { game: updatedGame },
+      data: { game: updatedGame, message },
     } = await axios.get(
       `${SERVER_URL}/api/games/${id}`,
       isPoll ? { params: { lastUpdated: game.lastUpdated } } : { params: { password } },
     )
     if (onSuccess) onSuccess()
     if (updatedGame) dispatch(actions.fetchGameSuccess(formatGame(updatedGame, username)))
+    dispatch(setMessage(message))
     poll = setTimeout(() => dispatch(fetchGame({ id, isPoll: true })), 2500)
   } catch (err) {
     dispatch(

@@ -1,5 +1,6 @@
 import axios from 'lib/axios'
 import handleError from 'models/helpers/handleError'
+import { setMessage } from 'models/message'
 import * as actions from './actions'
 
 export { default } from './reducer'
@@ -30,9 +31,10 @@ export const fetchGames = isPoll => async (dispatch, getState) => {
 
   try {
     const {
-      data: { games },
+      data: { games, message },
     } = await axios.get(`${SERVER_URL}/api/games`)
     dispatch(actions.fetchListSuccess(games))
+    dispatch(setMessage(message))
     poll = setTimeout(() => dispatch(fetchGames(true)), 2500)
   } catch (err) {
     if (!getState().user.username) return // Avoid showing error if we log out while polling
