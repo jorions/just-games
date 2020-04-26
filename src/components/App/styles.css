@@ -19,6 +19,12 @@
     padding-bottom: var(--nav-mobile-height);
   }
 }
+@media not all and (max-width: 480px) {
+  .appContainer {
+    height: 100%;
+    min-height: 100vh;
+  }
+}
 *:not(.appContainer) {
   box-sizing: border-box;
 }

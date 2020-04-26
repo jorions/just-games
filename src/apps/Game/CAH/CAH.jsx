@@ -313,15 +313,32 @@ class CAH extends PureComponent {
         </div>
         <div styleName={style({ swap: true, disabled: !remainingSwaps })} className="flex-centered">
           {isSwapping ? (
-            <Button variant="outlined" onClick={this.handleSwapToggle}>
-              Cancel Swapping
-            </Button>
+            <>
+              <Button variant="outlined" onClick={this.handleSwapToggle}>
+                Cancel Swapping
+              </Button>
+              <Button variant="contained" color="primary" onClick={this.handleSwapToggle}>
+                Cancel Swapping
+              </Button>
+            </>
           ) : (
-            <Button variant="outlined" disabled={!remainingSwaps} onClick={this.handleSwapToggle}>
-              {remainingSwaps
-                ? `Pick Up To ${remainingSwaps} Card${remainingSwaps === 1 ? '' : 's'} To Swap`
-                : 'No Swaps Remaining'}
-            </Button>
+            <>
+              <Button variant="outlined" disabled={!remainingSwaps} onClick={this.handleSwapToggle}>
+                {remainingSwaps
+                  ? `Pick Up To ${remainingSwaps} Card${remainingSwaps === 1 ? '' : 's'} To Swap`
+                  : 'No Swaps Remaining'}
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={!remainingSwaps}
+                onClick={this.handleSwapToggle}
+              >
+                {remainingSwaps
+                  ? `Pick Up To ${remainingSwaps} Card${remainingSwaps === 1 ? '' : 's'} To Swap`
+                  : 'No Swaps Remaining'}
+              </Button>
+            </>
           )}
         </div>
       </div>
