@@ -3,9 +3,6 @@
   display: inline-block;
 }
 @media not all and (max-width: 840px) {
-  .appContainer {
-    height: 100vh;
-  }
   .appContainer:not(.loggedOut) {
     width: calc(100vw - var(--nav-non-mobile-width));
     margin-left: var(--nav-non-mobile-width);
