@@ -9,22 +9,14 @@
   left: 1rem;
 }
 
-.headerSpacer {
-  width: 70px;
-  height: var(--header-height);
-  vertical-align: top;
+.header,
+.buttonContainer {
+  display: inline-block;
 }
-
 .header {
   width: calc(100% - 140px);
 }
-
-.headerSpacer,
-.header,
-.deleteContainer {
-  display: inline-block;
-}
-.deleteContainer {
+.buttonContainer {
   width: 70px;
   height: var(--header-height);
   vertical-align: top;
@@ -37,17 +29,14 @@
   align-items: center;
 }
 
-.cah .headerSpacer {
+.cah .buttonContainer {
   background-color: black;
 }
-@media not all and (max-width: 480px) {
-  .cah .headerSpacer {
+@media not all and (max-width: 840px) {
+  .cah > .buttonContainer:first-child {
     border-left: 1px solid white;
   }
 }
-.cah .deleteContainer {
-  background-color: black;
-}
-.cah .deleteIcon {
+.cah .icon {
   color: white;
 }

@@ -9,6 +9,13 @@
   background-color: var(--green);
   padding: 6px;
 }
+@media (max-width: 840px) {
+  .status {
+    position: sticky;
+    top: 0;
+    z-index: 99;
+  }
+}
 
 .blackCard {
   background-color: black !important;

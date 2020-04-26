@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
+import HelpIcon from '@material-ui/icons/HelpOutline'
 import { Redirect } from '@reach/router'
 
 import { gameNames } from 'shared/games'
@@ -17,7 +18,12 @@ import CAH from './CAH'
 import styles from './styles.css'
 
 class Game extends PureComponent {
-  state = { password: '', lastSubmittedPassword: null, deletingGame: false }
+  state = {
+    password: '',
+    lastSubmittedPassword: null,
+    deletingGame: false,
+    showInstructions: false,
+  }
 
   componentDidMount() {
     const { fetchGame } = this.props
@@ -40,6 +46,14 @@ class Game extends PureComponent {
       clearErrors()
       fetchGame(password, () => this.setState({ password: '', lastSubmittedPassword: null }))
     })
+  }
+
+  handleInstructionsClick = () => {
+    this.setState({ showInstructions: true })
+  }
+
+  handleCloseInstructionsClick = () => {
+    this.setState({ showInstructions: false })
   }
 
   handleDeleteClick = () => {
@@ -158,41 +172,49 @@ class Game extends PureComponent {
     )
   }
 
-  renderGame() {
-    const { type, submitAction } = this.props
+  renderInstructions() {
+    const { type } = this.props
 
     switch (type) {
       case gameNames.CAH:
-        return <CAH submitAction={submitAction} />
+        return (
+          <div>
+            <div className="mb2">To quote the official page:</div>
+            <div className="mb2">
+              "Each round, one player asks a question from a black card, and everyone else answers
+              with their funniest white card."
+            </div>
+            <div className="mb2">
+              The player asking the question is the "Czar". The Czar changes at the end of each
+              round.
+            </div>
+            <div className="mb2">
+              When players pick their answer, it will require at least 1 card, but some black cards
+              call for multiple white cards.
+            </div>
+            <div className="mb2">
+              Simply click a white card to select it. Once you select all of the necessary cards,
+              click "Submit Your Card" at the top of the page.
+            </div>
+            <div className="mb2">
+              Once all players have submitted their cards, the Czar will pick their favorite answer.
+            </div>
+            <div className="mb2">
+              Simply click the cards to select them, then click "Submit Your Choice" at the top of
+              the page.
+            </div>
+          </div>
+        )
       default:
-        return null
+        return 'Instructions unavailable'
     }
   }
 
-  render() {
-    const {
-      fetchGameLoading,
-      deleteGameLoading,
-      deleteGameSuccess,
-      name,
-      isOwner,
-      className,
-      deleteGame,
-    } = this.props
-    const { deletingGame } = this.state
-
-    if (fetchGameLoading)
-      return (
-        <div className="center mt4 pt4">
-          <Spinner size={120} />
-        </div>
-      )
-
-    if (deleteGameSuccess) return <Redirect to="/" noThrow />
-
+  renderInteractionModal() {
+    const { deleteGameLoading, deleteGame } = this.props
+    const { deletingGame, showInstructions } = this.state
     return (
       <>
-        {this.renderErrorModal()}
         <Modal
           isOpen={deletingGame}
           title="Are you sure you want to end the game?"
@@ -218,24 +240,63 @@ class Game extends PureComponent {
                 ]
           }
         />
+        <Modal
+          isOpen={showInstructions}
+          title="How To Play"
+          content={this.renderInstructions()}
+          onOKClick={this.handleCloseInstructionsClick}
+        />
+      </>
+    )
+  }
+
+  renderGame() {
+    const { type, submitAction } = this.props
+
+    switch (type) {
+      case gameNames.CAH:
+        return <CAH submitAction={submitAction} />
+      default:
+        return null
+    }
+  }
+
+  render() {
+    const { fetchGameLoading, deleteGameSuccess, name, isOwner, className } = this.props
+
+    if (fetchGameLoading)
+      return (
+        <div className="center mt4 pt4">
+          <Spinner size={120} />
+        </div>
+      )
+
+    if (deleteGameSuccess) return <Redirect to="/" noThrow />
+
+    return (
+      <>
+        {this.renderErrorModal()}
+        {this.renderInteractionModal()}
         <div className={className}>
-          {isOwner ? (
-            <>
-              <div styleName="headerSpacer" />
-              <div styleName="header">
-                <Header title={name} />
-              </div>
-              <div styleName="deleteContainer">
-                <div styleName="delete">
-                  <IconButton onClick={this.handleDeleteClick}>
-                    <DeleteIcon classes={{ root: styles.deleteIcon }} />
-                  </IconButton>
-                </div>
-              </div>
-            </>
-          ) : (
+          <div styleName="buttonContainer">
+            <div styleName="delete">
+              <IconButton onClick={this.handleInstructionsClick}>
+                <HelpIcon classes={{ root: styles.icon }} />
+              </IconButton>
+            </div>
+          </div>
+          <div styleName="header">
             <Header title={name} />
-          )}
+          </div>
+          <div styleName="buttonContainer">
+            {isOwner && (
+              <div styleName="delete">
+                <IconButton onClick={this.handleDeleteClick}>
+                  <DeleteIcon classes={{ root: styles.icon }} />
+                </IconButton>
+              </div>
+            )}
+          </div>
         </div>
         {this.renderGame()}
       </>

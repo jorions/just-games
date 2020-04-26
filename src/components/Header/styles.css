@@ -20,8 +20,3 @@
 .cah {
   background-color: black;
 }
-@media not all and (max-width: 840px) {
-  .cah:not(.owner) {
-    border-left: 1px solid white;
-  }
-}

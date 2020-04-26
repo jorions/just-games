@@ -1,6 +1,5 @@
 .appContainer {
   vertical-align: top;
-  overflow: scroll;
   display: inline-block;
 }
 @media not all and (max-width: 840px) {
