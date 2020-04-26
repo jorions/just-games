@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { hot } from 'react-hot-loader/root'
 import { Router, Redirect } from '@reach/router'
@@ -25,48 +25,26 @@ ConditionalRedirect.propTypes = {
   Component: PropTypes.shape().isRequired,
 }
 
-class App extends PureComponent {
-  state = { collapsed: false }
+const App = ({ loggedIn, className }) => (
+  <ErrorBoundary>
+    {loggedIn && <Nav />}
+    <div className={className} styleName={style({ appContainer: true, loggedOut: !loggedIn })}>
+      <Router>
+        <ConditionalRedirect path="/" redirect={!loggedIn} redirectTo={logIn} Component={List} />
+        <ConditionalRedirect path={logIn} redirect={loggedIn} redirectTo="/" Component={LogIn} />
+        <ConditionalRedirect
+          path={game(':id')}
+          redirect={!loggedIn}
+          redirectTo={logIn}
+          Component={Game}
+        />
+        <Redirect from={logOut} to={logIn} noThrow />
+        <PathFallback default />
+      </Router>
+    </div>
+  </ErrorBoundary>
+)
 
-  // TODO: Implement collapse
-  toggleCollapse = () => {
-    this.setState(({ collapsed }) => ({ collapsed: !collapsed }))
-  }
-
-  render() {
-    const { loggedIn, className } = this.props
-    const { collapsed } = this.state
-    return (
-      <ErrorBoundary>
-        {loggedIn && <Nav collapsed={collapsed} toggleCollapse={this.toggleCollapse} />}
-        <div className={className} styleName={style({ appContainer: true, loggedOut: !loggedIn })}>
-          <Router>
-            <ConditionalRedirect
-              path="/"
-              redirect={!loggedIn}
-              redirectTo={logIn}
-              Component={List}
-            />
-            <ConditionalRedirect
-              path={logIn}
-              redirect={loggedIn}
-              redirectTo="/"
-              Component={LogIn}
-            />
-            <ConditionalRedirect
-              path={game(':id')}
-              redirect={!loggedIn}
-              redirectTo={logIn}
-              Component={Game}
-            />
-            <Redirect from={logOut} to={logIn} noThrow />
-            <PathFallback default />
-          </Router>
-        </div>
-      </ErrorBoundary>
-    )
-  }
-}
 App.propTypes = {
   loggedIn: PropTypes.bool.isRequired,
   className: PropTypes.string.isRequired,

@@ -15,9 +15,6 @@
     width: var(--nav-non-mobile-width);
     height: 100vh;
   }
-  .nav.collapsed {
-    width: 0px;
-  }
 }
 @media (max-width: 840px) {
   .nav {
@@ -69,6 +66,9 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+  }
+  .nav a div {
+    text-align: center;
   }
   .label {
     position: absolute;

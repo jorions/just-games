@@ -4,7 +4,6 @@ import { Link } from '@reach/router'
 import Button from '@material-ui/core/Button'
 
 import * as routes from 'routes'
-import style from 'lib/style'
 
 import styles from './styles.css'
 
@@ -32,8 +31,8 @@ const renderLink = (to, icon, text, styleName = '', onClick = () => {}) => (
   </Button>
 )
 
-const Nav = ({ loggedIn, className, collapsed, logOut }) => (
-  <div styleName={style({ nav: true, collapsed })} className={className}>
+const Nav = ({ loggedIn, className, logOut }) => (
+  <div styleName="nav" className={className}>
     {loggedIn && renderLink('/', 'home', 'Games')}
     {!loggedIn && renderLink(routes.logIn, 'sign-in-alt', 'Log In')}
     {loggedIn && renderLink(routes.logOut, 'sign-out-alt', 'Log Out', 'logOut', logOut)}
@@ -43,7 +42,6 @@ const Nav = ({ loggedIn, className, collapsed, logOut }) => (
 Nav.propTypes = {
   loggedIn: PropTypes.bool.isRequired,
   className: PropTypes.string.isRequired,
-  collapsed: PropTypes.bool.isRequired, // TODO: Use this
   logOut: PropTypes.func.isRequired,
 }
 
