@@ -1,4 +1,5 @@
 import axios from 'lib/axios'
+import { getUser } from 'lib/storage'
 import handleError from 'models/helpers/handleError'
 import * as actions from './actions'
 
@@ -15,10 +16,12 @@ const stopPollingForGame = () => {
   clearTimeout(poll)
 }
 
-export const markPlayerInactive = id =>
+export const markPlayerInactive = id => {
+  const { token } = getUser()
   axios
-    .post(`${SERVER_URL}/api/games/${id}/inactivePlayer`)
+    .post(`${SERVER_URL}/api/games/${id}/inactivePlayer`, { token })
     .catch(() => console.log('Error marking you inactive')) // eslint-disable-line no-console
+}
 
 export const reset = id => (dispatch, getState) => {
   const {

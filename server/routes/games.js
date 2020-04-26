@@ -4,6 +4,7 @@ const { buildRouter } = require('effectsloop-server-utils')
 
 const handleError = require('./handleError')
 const store = require('../lib/store')
+const { parseAndVerify } = require('../lib/jwt')
 
 const { parseAndRefreshAuth } = require('./middleware')
 
@@ -187,6 +188,9 @@ router.post('/:id/action', parseAndRefreshAuth, ({ request, response, state, cap
 })
 
 /**
+ * Receives
+ *  token: String
+ *
  * Responds
  *  201: OK
  *  404: Not found
@@ -194,22 +198,32 @@ router.post('/:id/action', parseAndRefreshAuth, ({ request, response, state, cap
  *  500: Server error
  *    error: { message: 'Something broke while attempting to mark you inactive' }
  */
-router.post('/:id/inactivePlayer', parseAndRefreshAuth, ({ response, state, captures: [id] }) => {
-  try {
-    store.markPlayerInactive(id, state.username)
+router.post(
+  '/:id/inactivePlayer',
+  parseAndRefreshAuth,
+  async ({ request, response, state, captures: [id] }) => {
+    try {
+      const {
+        body: { token },
+      } = request
 
-    response.status = 201
-  } catch (err) {
-    const options = {
-      [store.validationErrors.GAME_NOT_FOUND]: {
-        status: 404,
-        message: 'That game does not exist',
-      },
-      defaultMessage: 'Something broke while attempting to mark you inactive',
+      const username = token ? await parseAndVerify(token).username : state.username
+
+      store.markPlayerInactive(id, username)
+
+      response.status = 201
+    } catch (err) {
+      const options = {
+        [store.validationErrors.GAME_NOT_FOUND]: {
+          status: 404,
+          message: 'That game does not exist',
+        },
+        defaultMessage: 'Something broke while attempting to mark you inactive',
+      }
+
+      handleError({ response, state, err, options })
     }
-
-    handleError({ response, state, err, options })
-  }
-})
+  },
+)
 
 module.exports = router
