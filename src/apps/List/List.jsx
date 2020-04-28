@@ -46,7 +46,7 @@ class List extends PureComponent {
   handleCreateGame = () => {
     const { createGame } = this.props
     const { gameName, gameType, password } = this.state
-    if (!gameName || !gameType) return
+    if (!gameType) return
     createGame({ gameName, gameType, password })
   }
 
@@ -92,8 +92,8 @@ class List extends PureComponent {
             name="gameName"
             id="gameName"
             value={gameName}
-            placeholder="New Game Name"
-            label="New Game Name"
+            placeholder="New Game Name (optional)"
+            label="New Game Name (optional)"
             onChange={this.handleChange}
             fullWidth
           />
@@ -117,7 +117,7 @@ class List extends PureComponent {
               color="secondary"
               styleName="submitCreateGame"
               variant="contained"
-              disabled={!gameName || !gameType}
+              disabled={!gameType}
               fullWidth
               onClick={this.handleCreateGame}
             >

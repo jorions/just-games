@@ -65,7 +65,12 @@ router.get('/:id', parseAndRefreshAuth, ({ request, response, state, captures: [
     state.responseBodyMaxLoggingLen = 0 // eslint-disable-line no-param-reassign
 
     response.body = {
-      game: store.getGame({ id, password, username: state.username, lastUpdated }),
+      game: store.getGame({
+        id,
+        password,
+        username: state.username,
+        lastUpdated: Number(lastUpdated),
+      }),
       message: store.getMessage(),
     }
     response.status = 200
@@ -187,9 +192,6 @@ router.post('/:id/action', parseAndRefreshAuth, ({ request, response, state, cap
     const {
       body: { action, data },
     } = request
-
-    const ActionStruct = store.getGameStruct(id, action)
-    ActionStruct({ data })
 
     store.submitAction({ id, username: state.username, action, data })
 

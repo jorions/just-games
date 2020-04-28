@@ -1,5 +1,7 @@
 'use strict'
 
+const randomString = require('../randomString')
+
 const adjectives = [
   'amorphous',
   'amiable',
@@ -40,6 +42,42 @@ const adjectives = [
   'majestic',
   'modest',
   'meek',
+  'naughty',
+  'nihilistic',
+  'nonsensical',
+  'opulent',
+  'oppressive',
+  'outlandish',
+  'porous',
+  'palatable',
+  'prudish',
+  'questionable',
+  'quick',
+  'quarrelsome',
+  'rambunctious',
+  'rough',
+  'ranting',
+  'sweet',
+  'snarling',
+  'saucy',
+  'twisted',
+  'tardy',
+  'telepathic',
+  'unctious',
+  'unbelievable',
+  'unyielding',
+  'vexing',
+  'vast',
+  'voluminous',
+  'weary',
+  'wandering',
+  'wistful',
+  'xenodochial',
+  'yammering',
+  'yodeling',
+  'zany',
+  'zealous',
+  'zippy',
 ]
 const animals = [
   'aardvark',
@@ -69,8 +107,15 @@ const animals = [
 const random = arr => arr[Math.floor(Math.random() * arr.length)]
 
 const generateId = games => {
-  const newId = `${random(adjectives)}-${random(animals)}`
-  return games[newId] ? generateId(games) : newId
+  // Fall back to random string ID if there are already more games than possible combos
+  const idCount = Object.keys(games).length
+  if (idCount >= adjectives.length * animals.length) return randomString(12)
+
+  let newId = `${random(adjectives)}-${random(animals)}`
+  while (games[newId]) {
+    newId = generateId(games)
+  }
+  return newId
 }
 
 module.exports = generateId

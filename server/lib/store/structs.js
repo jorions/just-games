@@ -8,7 +8,7 @@ const LogIn = struct({
 
 const CreateGame = struct({
   gameType: 'string',
-  gameName: 'shortStringWithContent',
+  gameName: 'shortString',
   password: 'shortString',
 })
 

@@ -181,7 +181,7 @@ const createGame = ({ gameType, gameName, password, username }) => {
     type: gameType,
     password,
     lastUpdated: Date.now(),
-    ...new games[gameType].Game(gameName, username),
+    ...new games[gameType].Game(gameName || id.split('-').join(' '), username),
   }
 
   refreshUser(username)
@@ -233,7 +233,7 @@ const getGame = ({ id, username, password, lastUpdated, isUserReq = true }) => {
         // Player is becoming active again, so update
         updateGame(game)
       }
-      returnGame = game.lastUpdated !== Number(lastUpdated)
+      returnGame = game.lastUpdated !== lastUpdated
     }
 
     game.addOrRefreshPlayer(username)
@@ -243,14 +243,6 @@ const getGame = ({ id, username, password, lastUpdated, isUserReq = true }) => {
   return returnGame
     ? { id, type: game.type, lastUpdated: game.lastUpdated, ...game.getGame(username) }
     : null
-}
-
-const getGameStruct = (id, action) => {
-  const game = store.games[id]
-  if (!game) throw new ValidationError('Game not found', GAME_NOT_FOUND)
-  const struct = games[game.type].structs[action]
-  if (!struct) throw new ValidationError('Invalid action', INVALID_ACTION)
-  return struct
 }
 
 const deleteGame = (id, username) => {
@@ -270,6 +262,11 @@ const submitAction = ({ id, username, action, data }) => {
   if (!game) throw new ValidationError('Game not found', GAME_NOT_FOUND)
 
   if (!game.players[username]) throw new ValidationError('Unauthorized', UNAUTHORIZED)
+
+  const Struct = games[game.type].structs[action]
+  if (!Struct) throw new ValidationError('Invalid action', INVALID_ACTION)
+
+  Struct({ data })
 
   game.submitAction({ username, action, data }, () => {
     updateGame(game)
@@ -309,7 +306,6 @@ module.exports = {
   createGame,
   getGames,
   getGame,
-  getGameStruct,
   deleteGame,
   submitAction,
   markPlayerInactive,
