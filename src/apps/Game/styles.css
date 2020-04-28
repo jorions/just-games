@@ -12,6 +12,7 @@
 .header,
 .buttonContainer {
   display: inline-block;
+  vertical-align: top;
 }
 .header {
   width: calc(100% - 140px);
@@ -29,6 +30,9 @@
   align-items: center;
 }
 
+.buttonContainer {
+  background-color: var(--blue);
+}
 .cah .buttonContainer {
   background-color: black;
 }
@@ -37,6 +41,6 @@
     border-left: 1px solid white;
   }
 }
-.cah .icon {
+.icon {
   color: white;
 }
