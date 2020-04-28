@@ -20,6 +20,7 @@ const initialState = {
     }
     */
   ],
+  lastUpdated: null,
   fetchGamesLoading: false,
   newGameId: null,
   createGameLoading: false,
@@ -39,6 +40,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         games: action.games,
+        lastUpdated: action.lastUpdated,
         fetchGamesLoading: false,
       }
     case types.FETCH_LIST_ERROR:

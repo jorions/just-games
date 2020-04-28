@@ -11,16 +11,29 @@ const router = buildRouter('/api/games')
 /**
  * Responds
  *  200: OK
- *    games: [Game]
+ *    games: [Game] || null (if not updated)
+ *    lastUpdated: Number
  *    message: String || null
  *  500: Server error
  *    error: { message: 'Something broke while attempting to fetch games' }
  *
  *  403: Unauthorized
  */
-router.get('/', parseAndRefreshAuth, ({ response, state }) => {
+router.get('/', parseAndRefreshAuth, ({ request, response, state }) => {
   try {
-    response.body = { games: store.getGames(state.username), message: store.getMessage() }
+    const {
+      query: { lastUpdated },
+    } = request
+
+    state.responseBodyMaxLoggingLen = 0 // eslint-disable-line no-param-reassign
+
+    const { games, lastUpdated: lU } = store.getGames(state.username, Number(lastUpdated))
+
+    response.body = {
+      games,
+      lastUpdated: lU,
+      message: store.getMessage(),
+    }
     response.status = 200
   } catch (err) {
     handleError({ response, state, err, msg: 'Something broke while attempting to fetch games' })
@@ -49,7 +62,7 @@ router.get('/:id', parseAndRefreshAuth, ({ request, response, state, captures: [
       query: { password, lastUpdated },
     } = request
 
-    state.responseBodyMaxLoggingLen = 10 // eslint-disable-line no-param-reassign
+    state.responseBodyMaxLoggingLen = 0 // eslint-disable-line no-param-reassign
 
     response.body = {
       game: store.getGame({ id, password, username: state.username, lastUpdated }),

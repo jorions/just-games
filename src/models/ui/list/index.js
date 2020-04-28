@@ -22,7 +22,14 @@ export const reset = () => dispatch => {
 }
 
 export const fetchGames = isPoll => async (dispatch, getState) => {
-  if (!getState().user.username) return // Avoid fetching if we log out while polling
+  const {
+    user: { username },
+    ui: {
+      list: { lastUpdated },
+    },
+  } = getState()
+
+  if (!username) return // Avoid fetching if we log out while polling
 
   if (!isPoll) {
     if (poll) stopPollingForGames()
@@ -31,9 +38,9 @@ export const fetchGames = isPoll => async (dispatch, getState) => {
 
   try {
     const {
-      data: { games, message },
-    } = await axios.get(`${SERVER_URL}/api/games`)
-    dispatch(actions.fetchListSuccess(games))
+      data: { games, lastUpdated: newLastUpdated, message },
+    } = await axios.get(`${SERVER_URL}/api/games`, isPoll ? { params: { lastUpdated } } : {})
+    if (games) dispatch(actions.fetchListSuccess(games, newLastUpdated))
     dispatch(setMessage(message))
     poll = setTimeout(() => dispatch(fetchGames(true)), 2500)
   } catch (err) {

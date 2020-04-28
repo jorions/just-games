@@ -17,6 +17,7 @@ const MAX_TIME_BEFORE_INACTIVE_IN_MS = 1000 * 20 // 20s
 const MAX_TIME_BEFORE_DELETE_IN_MS = 1000 * 60 * 60 * 24 // 1d
 
 const store = {
+  gamesLastUpdated: Date.now(),
   games: {
     /*
     [id]: {
@@ -24,7 +25,7 @@ const store = {
       name: String
       password: String
       owner: String
-      lastUpdated: ISO String
+      lastUpdated: Date.now()
       players: {
         [username]: {
           isActive: Bool
@@ -44,11 +45,21 @@ const store = {
     /*
     [username]: {
       isActive: Bool
-      lastUpdated: ISO String
+      lastUpdated: Date.now()
     }
     */
   },
   message: null,
+}
+
+const updateGamesList = now => {
+  store.gamesLastUpdated = now || Date.now()
+}
+
+const updateGame = game => {
+  const now = Date.now()
+  game.lastUpdated = now // eslint-disable-line no-param-reassign
+  updateGamesList(now)
 }
 
 // Once every 10s, update players in games and delete empty games
@@ -60,11 +71,14 @@ setInterval(() => {
       // If the player is currently active and hasn't polled in too long, mark inactive for game
       if (userGameInfo.isActive && now - userGameInfo.lastPolled > MAX_TIME_BEFORE_INACTIVE_IN_MS) {
         store.games[gameId].markPlayerInactive(username)
-        store.games[gameId].lastUpdated = Date.now()
+        updateGame(store.games[gameId])
       }
       if (store.games[gameId].players[username].isActive) deleteGame = false
     })
-    if (deleteGame) delete store.games[gameId]
+    if (deleteGame) {
+      delete store.games[gameId]
+      updateGamesList()
+    }
   })
 }, 10000)
 // Once every 10s, clean up users
@@ -172,19 +186,28 @@ const createGame = ({ gameType, gameName, password, username }) => {
 
   refreshUser(username)
 
+  updateGamesList()
+
   return id
 }
 
-const getGames = username => {
+const getGames = (username, lastUpdated) => {
   refreshUser(username)
-  return Object.entries(store.games).map(([id, { type, owner, name, password, players }]) => ({
-    type,
-    owner,
-    name,
-    passwordRequired: !!password,
-    players: Object.keys(players),
-    id,
-  }))
+
+  return {
+    lastUpdated: store.gamesLastUpdated,
+    games:
+      lastUpdated === store.gamesLastUpdated
+        ? null
+        : Object.entries(store.games).map(([id, { type, owner, name, password, players }]) => ({
+            type,
+            owner,
+            name,
+            passwordRequired: !!password,
+            players: Object.keys(players),
+            id,
+          })),
+  }
 }
 
 // isUserReq = false when coming from submitAction
@@ -204,11 +227,11 @@ const getGame = ({ id, username, password, lastUpdated, isUserReq = true }) => {
       if (playerIsInAnotherGame)
         throw new ValidationError('Player is already in a game', PLAYER_IN_GAME)
       // Player is joining the game, so update
-      game.lastUpdated = Date.now()
+      updateGame(game)
     } else {
       if (!player.isActive) {
         // Player is becoming active again, so update
-        game.lastUpdated = Date.now()
+        updateGame(game)
       }
       returnGame = game.lastUpdated !== Number(lastUpdated)
     }
@@ -239,6 +262,7 @@ const deleteGame = (id, username) => {
   refreshUser(username)
 
   delete store.games[id]
+  updateGamesList()
 }
 
 const submitAction = ({ id, username, action, data }) => {
@@ -248,13 +272,13 @@ const submitAction = ({ id, username, action, data }) => {
   if (!game.players[username]) throw new ValidationError('Unauthorized', UNAUTHORIZED)
 
   game.submitAction({ username, action, data }, () => {
-    game.lastUpdated = Date.now()
+    updateGame(game)
   })
   game.refreshPlayer(username)
 
   refreshUser(username)
 
-  game.lastUpdated = Date.now()
+  updateGame(game)
 }
 
 const markPlayerInactive = (id, username) => {
@@ -263,7 +287,7 @@ const markPlayerInactive = (id, username) => {
 
   if (game.players[username]) {
     game.markPlayerInactive(username)
-    game.lastUpdated = Date.now()
+    updateGame(game)
   }
 }
 
@@ -273,7 +297,7 @@ const removeUser = (username, gameId) => {
     const game = store.games[gameId]
     if (!game) throw new ValidationError('Game not found', GAME_NOT_FOUND)
     game.removePlayer(username)
-    game.lastUpdated = Date.now()
+    updateGame(game)
   }
 }
 

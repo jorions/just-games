@@ -4,9 +4,10 @@ export const fetchListStart = () => ({
   type: types.FETCH_LIST_START,
 })
 
-export const fetchListSuccess = games => ({
+export const fetchListSuccess = (games, lastUpdated) => ({
   type: types.FETCH_LIST_SUCCESS,
   games,
+  lastUpdated,
 })
 
 export const fetchListError = () => ({
