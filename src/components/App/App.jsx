@@ -37,7 +37,13 @@ const App = ({ loggedIn, read, message, className, confirmMessage }) => (
     />
     {loggedIn && <Nav />}
     <div className={className} styleName={style({ appContainer: true, loggedOut: !loggedIn })}>
-      <Suspense fallback={<Spinner />}>
+      <Suspense
+        fallback={
+          <div className="flex-centered" styleName="loader">
+            <Spinner size={120} />
+          </div>
+        }
+      >
         <Router>
           <ConditionalRedirect path="/" redirect={!loggedIn} redirectTo={logIn} Component={List} />
           <ConditionalRedirect path={logIn} redirect={loggedIn} redirectTo="/" Component={LogIn} />

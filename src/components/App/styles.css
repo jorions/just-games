@@ -29,6 +29,10 @@
   box-sizing: border-box;
 }
 
+.loader {
+  margin-top: calc(50% - 120px);
+}
+
 .cah {
   background-color: var(--light-gray);
 }
