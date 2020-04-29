@@ -19,10 +19,11 @@ module.exports = {
   // combining into 1 file.
   entry: ['./src/index.jsx'],
   output: {
-    filename: 'bundle.js',
+    // hash will avoid browsers not fetching because of old cached bundles
+    filename: '[name].[hash:8].js',
     // chunkFilename determines the use name of non-entry chunk files. These filenames
     // are generated at runtime, which then sends requests for those chunks.
-    chunkFilename: '[name].bundle.js',
+    chunkFilename: '[name].[hash:8].js',
     path: path.resolve(__dirname, 'public'),
   },
   // The mode not only indicates to webpack and 3rd party packages whether to enable
