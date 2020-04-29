@@ -28,11 +28,11 @@ router.post('/logIn', async ({ request, response, state }) => {
     const { username } = request.body
 
     store.LogIn({ username })
-    store.logIn(username)
+    const id = store.logIn(username)
 
     response.status = 200
     // This is the logic used by our middleware for refreshing a token
-    response.set('New-Token', jwt.sign({ username }))
+    response.set('New-Token', jwt.sign({ username, id }))
     response.set('Access-Control-Expose-Headers', 'New-Token')
   } catch (err) {
     const options = {

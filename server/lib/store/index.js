@@ -1,6 +1,7 @@
 'use strict'
 
 const { ValidationError } = require('../Errors')
+const randomString = require('../randomString')
 const games = require('./games')
 const generateId = require('./generateId')
 const structs = require('./structs')
@@ -18,6 +19,10 @@ const MAX_TIME_BEFORE_DELETE_IN_MS = 1000 * 60 * 60 * 24 // 1d
 
 const store = {
   gamesLastUpdated: Date.now(),
+  history: {
+    totalGames: 0,
+    totalUsers: 0,
+  },
   games: {
     /*
     [id]: {
@@ -46,6 +51,7 @@ const store = {
     [username]: {
       isActive: Bool
       lastUpdated: Date.now()
+      id: String
     }
     */
   },
@@ -91,10 +97,15 @@ setInterval(() => {
   })
 }, 10000)
 
+const userRefreshData = () => ({
+  isActive: true,
+  lastUpdated: Date.now(),
+})
+
 const refreshUser = username => {
   store.users[username] = {
-    isActive: true,
-    lastUpdated: Date.now(),
+    ...store.users[username],
+    ...userRefreshData(),
   }
 }
 
@@ -102,11 +113,11 @@ const getAllActiveUsernamesInGames = gameIdToFilter => {
   const activeUsers = []
   Object.entries(store.games)
     .filter(([id]) => (gameIdToFilter ? gameIdToFilter !== id : true))
-    .forEach(([, { players }]) =>
+    .forEach(([, { players }]) => {
       Object.entries(players)
         .filter(([, { isActive }]) => isActive)
-        .forEach(([username]) => activeUsers.push(username)),
-    )
+        .forEach(([username]) => activeUsers.push(username))
+    })
   return activeUsers
 }
 
@@ -118,7 +129,11 @@ const setMessage = message => {
 }
 
 const getOverview = () => {
-  const gamesOverview = { data: {}, totalCount: 0 }
+  const gamesOverview = {
+    data: {},
+    totalCurrentCount: 0,
+    totalHistoryCount: store.history.totalGames,
+  }
   Object.entries(store.games).forEach(([id, { type, name, owner, lastUpdated, players: p }]) => {
     const gameType = gamesOverview.data[type]
     const players = {}
@@ -139,7 +154,7 @@ const getOverview = () => {
         games: [data],
       }
     }
-    gamesOverview.totalCount += 1
+    gamesOverview.totalCurrentCount += 1
   })
 
   const usersOverview = {
@@ -147,13 +162,14 @@ const getOverview = () => {
       active: { count: 0, users: [] },
       inactive: { count: 0, users: [] },
     },
-    totalCount: 0,
+    totalCurrentCount: 0,
+    totalHistoryCount: store.history.totalUsers,
   }
   Object.entries(store.users).forEach(([username, { isActive, lastUpdated }]) => {
     const userType = usersOverview.data[isActive ? 'active' : 'inactive']
     userType.count += 1
     userType.users.push({ username, lastUpdated: new Date(lastUpdated) })
-    usersOverview.totalCount += 1
+    usersOverview.totalCurrentCount += 1
   })
 
   return {
@@ -167,8 +183,13 @@ const getOverview = () => {
 const logIn = username => {
   const user = store.users[username]
   if (user && user.isActive) throw new ValidationError('Account is already taken', ACCOUNT_TAKEN)
-  refreshUser(username)
+  const id = randomString(16)
+  store.users[username] = { id, ...userRefreshData() }
+  store.history.totalGames += 1
+  return id
 }
+
+const userIsValid = (username, id) => store.users[username] && store.users[username].id === id
 
 const createGame = ({ gameType, gameName, password, username }) => {
   if (getAllActiveUsernamesInGames().includes(username))
@@ -187,6 +208,8 @@ const createGame = ({ gameType, gameName, password, username }) => {
   refreshUser(username)
 
   updateGamesList()
+
+  store.history.totalGames += 1
 
   return id
 }
@@ -300,6 +323,7 @@ const removeUser = (username, gameId) => {
 
 module.exports = {
   logIn,
+  userIsValid,
   getMessage,
   setMessage,
   getOverview,
