@@ -185,7 +185,7 @@ const logIn = username => {
   if (user && user.isActive) throw new ValidationError('Account is already taken', ACCOUNT_TAKEN)
   const id = randomString(16)
   store.users[username] = { id, ...userRefreshData() }
-  store.history.totalGames += 1
+  store.history.totalUsers += 1
   return id
 }
 
