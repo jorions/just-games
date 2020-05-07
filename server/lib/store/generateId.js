@@ -1,6 +1,6 @@
 'use strict'
 
-const randomString = require('../randomString')
+const randomString = require('./randomString')
 
 const adjectives = [
   'amorphous',

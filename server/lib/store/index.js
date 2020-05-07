@@ -1,7 +1,7 @@
 'use strict'
 
 const { ValidationError } = require('../Errors')
-const randomString = require('../randomString')
+const randomString = require('./randomString')
 const games = require('./games')
 const generateId = require('./generateId')
 const structs = require('./structs')
@@ -202,7 +202,9 @@ const createGame = ({ gameType, gameName, password, username }) => {
     type: gameType,
     password,
     lastUpdated: Date.now(),
-    ...new games[gameType].Game(gameName || id.split('-').join(' '), username),
+    ...new games[gameType].Game(gameName || id.split('-').join(' '), username, () =>
+      updateGame(store.games[id]),
+    ),
   }
 
   refreshUser(username)
@@ -291,9 +293,7 @@ const submitAction = ({ id, username, action, data }) => {
 
   Struct({ data })
 
-  game.submitAction({ username, action, data }, () => {
-    updateGame(game)
-  })
+  game.submitAction({ username, action, data })
   game.refreshPlayer(username)
 
   refreshUser(username)

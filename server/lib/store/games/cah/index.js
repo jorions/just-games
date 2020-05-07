@@ -1,19 +1,21 @@
 'use strict'
 
 const { gameNames, games } = require('../../../../../shared/games')
-const shuffle = require('../../../shuffle')
-const corePlayerInfo = require('../corePlayerInfo')
+const shuffleIdxs = require('../utils/shuffleIdxs')
+const shuffle = require('../utils/shuffle')
+const getNextPlayer = require('../utils/getNextPlayer')
+const getNewDeckIdxs = require('../utils/getNewDeckIdxs')
+const corePlayerInfo = require('../utils/corePlayerInfo')
 const startingCards = require('./cards')
 const structs = require('./structs')
 
 const { PICKING_WINNER, WINNER, PLAYERS_SUBMITTING } = games[gameNames.CAH].statuses
 
-const getNewBlackDeckIdxs = () => shuffle([...Array(startingCards.blackCards.length).keys()])
-const getNewWhiteDeckIdxs = () => shuffle([...Array(startingCards.whiteCards.length).keys()])
+const getNewBlackDeckIdxs = () => shuffleIdxs(startingCards.blackCards)
+const getNewWhiteDeckIdxs = () => shuffleIdxs(startingCards.whiteCards)
 
 const ROUND_COOLDOWN_IN_MS = 5000
 
-// Use 'function' to avoid binding 'this' to above scope. This lets us create multiple instances of the game.
 class CAH {
   #pastCzars = []
 
@@ -21,10 +23,11 @@ class CAH {
 
   #blackCardIdxs = getNewBlackDeckIdxs()
 
-  constructor(name, creator) {
+  constructor(name, creator, updateGame) {
     // Generic info
     this.name = name
     this.owner = creator
+    this.updateGame = updateGame
     this.players = {}
     // Game-specific
     this.status = {
@@ -47,18 +50,11 @@ class CAH {
 
   refreshWhiteCards() {
     // Reset the white cards by adding all cards back that are not currently in players' hands
-    const cardsInPlayersHands = {}
+    const cardsInPlayersHands = []
     Object.values(this.players).forEach(({ cards }) => {
-      cards.forEach(card => {
-        cardsInPlayersHands[card] = true
-      })
+      cardsInPlayersHands.push(...cards)
     })
-    this.#whiteCardIdxs = shuffle(
-      startingCards.whiteCards
-        .map((card, idx) => ({ card, idx }))
-        .filter(({ card }) => !cardsInPlayersHands[card])
-        .map(({ idx }) => idx),
-    )
+    this.#whiteCardIdxs = getNewDeckIdxs(startingCards.whiteCards, cardsInPlayersHands)
   }
 
   getNextBlackCard() {
@@ -73,37 +69,7 @@ class CAH {
 
   pickNextCzar() {
     this.#pastCzars.push(this.czar)
-    const activePlayers = corePlayerInfo.getActivePlayers(this.players)
-    const activePlayerCount = Object.keys(activePlayers).length
-    // If there are fewer active players than the czars being filtered out, shrink
-    // the list of czars to start at the same size as the count of active players.
-    const baselineCzarsToFilterOut =
-      activePlayerCount < this.#pastCzars.length
-        ? this.#pastCzars.slice(this.#pastCzars.length - activePlayerCount, this.#pastCzars.length)
-        : this.#pastCzars
-    const getNextCzar = (offset = 0) => {
-      // If we've reached the end of the array just pick an active player at random
-      if (offset === baselineCzarsToFilterOut.length) {
-        const activeUsernames = Object.keys(activePlayers)
-        return activeUsernames.length
-          ? activeUsernames[Math.floor(Math.random() * activeUsernames.length)]
-          : null // If there are no active users bail out to avoid a stack overflow
-      }
-      const czarsToFilterOut = baselineCzarsToFilterOut.slice(
-        offset,
-        baselineCzarsToFilterOut.length,
-      )
-      // Get all active players that are not in the czar list
-      const canUse = Object.keys(activePlayers).filter(
-        username => !czarsToFilterOut.includes(username),
-      )
-      // If the list of players than can become the czar has any players, randomly select one
-      // Otherwise, recursively shrink list of potential czars by 1 until we find an active player that is an option
-      return canUse.length
-        ? canUse[Math.floor(Math.random() * canUse.length)]
-        : getNextCzar(offset + 1)
-    }
-    this.czar = getNextCzar()
+    this.czar = getNextPlayer(this.players, this.#pastCzars)
     this.status = {
       key: PLAYERS_SUBMITTING,
       data: null,
@@ -138,15 +104,15 @@ class CAH {
     // If the player is the czar skip the round and move on
     if (username === this.czar) {
       // If the status is WINNER, then the round will move on after setTimeout automatically
-      if (this.status !== WINNER) this.moveToNextRound()
-    } else if (this.status === PLAYERS_SUBMITTING) {
+      if (this.status.key !== WINNER) this.moveToNextRound()
+    } else if (this.status.key === PLAYERS_SUBMITTING) {
       this.moveToPickingWinnerIfAllHavePlayed()
     }
   }
 
   /* ---------------------------- Player actions ---------------------------- */
 
-  pickWinner(username, pickedWinnerIdx, updateGame) {
+  pickWinner(username, pickedWinnerIdx) {
     // Confirm submitter is the czar
     if (this.czar !== username) throw new Error('notCzar')
     // Confirm game is in proper phase
@@ -162,12 +128,12 @@ class CAH {
       data: pickedWinner,
     }
 
-    // Move to next round after 10 seconds
+    // Move to next round after 5 seconds
     setTimeout(() => {
       // Give winner the black card
       winningPlayer.winningCards.push(this.prompt)
       this.moveToNextRound()
-      updateGame()
+      this.updateGame()
     }, ROUND_COOLDOWN_IN_MS)
   }
 
@@ -266,28 +232,28 @@ class CAH {
     this.handlePlayerDrop(username)
   }
 
-  submitAction = ({ username, action, data }, updateGame) => {
+  submitAction = ({ username, action, data }) => {
     const { actions } = games[gameNames.CAH]
     const actionMap = {
       [actions.SUBMIT_CARDS]: (u, d) => this.submitCards(u, d),
-      [actions.PICK_WINNER]: (u, d) => this.pickWinner(u, d, updateGame),
+      [actions.PICK_WINNER]: (u, d) => this.pickWinner(u, d),
       [actions.SWAP_CARDS]: (u, d) => this.swapCards(u, d),
     }
     actionMap[action](username, data)
   }
 
   getGame = username => {
-    const { owner, status, czar, prompt, playedCardsThisRound, players } = this
+    const { name, owner, status, czar, prompt, playedCardsThisRound, players } = this
     let formattedCardsThisRound = playedCardsThisRound
     if (status.key === PLAYERS_SUBMITTING)
       formattedCardsThisRound = playedCardsThisRound.map(({ player }) => player)
     else if (status.key === PICKING_WINNER)
       formattedCardsThisRound = playedCardsThisRound.map(({ playedCards }) => playedCards)
     return {
+      name,
       owner,
       status,
       czar,
-      name: this.name,
       prompt,
       playedCardsThisRound: formattedCardsThisRound,
       players: Object.entries(players).reduce((acc, [u, info]) => {
