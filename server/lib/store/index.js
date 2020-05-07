@@ -14,8 +14,9 @@ const INVALID_GAME_TYPE = 'invalidGameType'
 const UNAUTHORIZED = 'unauthorized'
 const INVALID_ACTION = 'invalidAction'
 
-const MAX_TIME_BEFORE_INACTIVE_IN_MS = 1000 * 20 // 20s
+const MAX_TIME_BEFORE_INACTIVE_IN_MS = 1000 * 60 * 2 // 2m
 const MAX_TIME_BEFORE_DELETE_IN_MS = 1000 * 60 * 60 * 24 // 1d
+const MAX_TIME_BEFORE_DELETE_GAME_IN_MS = 1000 * 60 * 20 // 20m
 
 const store = {
   gamesLastUpdated: Date.now(),
@@ -81,7 +82,7 @@ setInterval(() => {
       }
       if (store.games[gameId].players[username].isActive) deleteGame = false
     })
-    if (deleteGame) {
+    if (deleteGame && now - store.games[gameId].lastUpdated > MAX_TIME_BEFORE_DELETE_GAME_IN_MS) {
       delete store.games[gameId]
       updateGamesList()
     }
