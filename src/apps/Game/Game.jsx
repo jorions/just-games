@@ -217,6 +217,44 @@ class Game extends PureComponent {
             </Typography>
           </>
         )
+      case gameNames.CODENAMES:
+        return (
+          <>
+            <Typography className="mb2">
+              <a
+                href="https://czechgames.com/files/rules/codenames-rules-en.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                You can find the official instruction manual here.
+              </a>
+            </Typography>
+            <Typography className="mb2">
+              Beyond the standard instructions, the only other things to know are:
+            </Typography>
+            <ul className="mb2">
+              <li>
+                <Typography>
+                  The creator of the game can start the game at any point after there are at least 2
+                  players on each team.
+                </Typography>
+              </li>
+              <li>
+                <Typography>
+                  All players on a team must vote for the same card for the vote to go through. When
+                  multiple cards are voted on, they will be hilighted in orange to show the
+                  conflict.
+                </Typography>
+              </li>
+              <li>
+                <Typography>
+                  At any point during a round the spymaster can choose to end the round if their
+                  teammates are stumped.
+                </Typography>
+              </li>
+            </ul>
+          </>
+        )
       default:
         return 'Instructions unavailable'
     }
