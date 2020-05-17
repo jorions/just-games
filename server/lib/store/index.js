@@ -292,7 +292,7 @@ const submitAction = ({ id, username, action, data }) => {
   const Struct = games[game.type].structs[action]
   if (!Struct) throw new ValidationError('Invalid action', INVALID_ACTION)
 
-  Struct({ data })
+  if (data) Struct({ data })
 
   game.submitAction({ username, action, data })
   game.refreshPlayer(username)

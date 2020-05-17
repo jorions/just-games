@@ -18,7 +18,7 @@ const stopPollingForGame = () => {
   clearTimeout(poll)
 }
 
-export const markPlayerInactive = id => {
+const markPlayerInactive = id => {
   const { token } = getUser()
   if (!token) return // Early-exit if this is calling because of logging out
   axios
@@ -63,8 +63,14 @@ export const fetchGame = ({ id, password, onSuccess, isPoll = false }) => async 
       isPoll ? { params: { lastUpdated: game.lastUpdated } } : { params: { password } },
     )
     if (onSuccess) onSuccess()
-    if (updatedGame)
-      dispatch(actions.fetchGameSuccess(formatGame[updatedGame.type](updatedGame, username)))
+    if (updatedGame) {
+      const gameFormatter = formatGame[updatedGame.type]
+      dispatch(
+        actions.fetchGameSuccess(
+          gameFormatter ? gameFormatter(updatedGame, username) : updatedGame,
+        ),
+      )
+    }
     dispatch(setMessage(message))
     poll = setTimeout(() => dispatch(fetchGame({ id, isPoll: true })), 2500)
   } catch (err) {

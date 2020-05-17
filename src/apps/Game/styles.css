@@ -36,8 +36,15 @@
 .cah .buttonContainer {
   background-color: black;
 }
+.codenames.red .buttonContainer {
+  background-color: var(--red);
+}
+.codenames.blue .buttonContainer {
+  background-color: var(--blue);
+}
 @media not all and (max-width: 840px) {
-  .cah > .buttonContainer:first-child {
+  .cah > .buttonContainer:first-child,
+  .codenames > .buttonContainer:first-child {
     border-left: 1px solid white;
   }
 }

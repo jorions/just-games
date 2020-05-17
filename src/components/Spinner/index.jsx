@@ -2,11 +2,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-const Spinner = ({ size, color }) => <CircularProgress size={size} color={color} />
+const Spinner = ({ size, color }) =>
+  color === 'primary' || color === 'secondary' ? (
+    <CircularProgress size={size} color={color} />
+  ) : (
+    <CircularProgress size={size} classes={{ root: `color: ${color}` }} />
+  )
 
 Spinner.propTypes = {
   size: PropTypes.number,
-  color: PropTypes.string,
+  color: PropTypes.oneOf(['primary', 'secondary', 'black', 'white']),
 }
 
 Spinner.defaultProps = {

@@ -203,6 +203,7 @@ module.exports = {
       'process.env': {
         IN_DEV_MODE: JSON.stringify(inDevMode),
         SERVER_URL: JSON.stringify(process.env.SERVER_URL),
+        MULTI_USER: JSON.stringify(process.env.MULTI_USER === 'true'),
       },
     }),
     ...extraPlugins,

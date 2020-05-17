@@ -19,5 +19,10 @@ module.exports = superstruct({
         return `Expected string to be < ${shortStringCharLimit} chars long`
       return true
     },
+    stringNoSpaces: val => {
+      if (typeof val !== 'string') return `Expected a string but received a ${typeof val}`
+      if (val.includes(' ')) return 'Expected a string with no spaces'
+      return true
+    },
   },
 })

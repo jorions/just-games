@@ -20,3 +20,10 @@
 .cah {
   background-color: black;
 }
+
+.codenames.red {
+  background-color: var(--red);
+}
+.codenames.blue {
+  background-color: var(--blue);
+}

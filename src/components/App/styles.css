@@ -33,6 +33,13 @@
   margin-top: calc(50% - 120px);
 }
 
-.cah {
+.cah,
+.codenames {
   background-color: var(--light-gray);
+}
+
+@media not all and (max-height: 850px) {
+  .codenames > div > div:last-child {
+    height: calc(100vh - var(--header-height));
+  }
 }

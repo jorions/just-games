@@ -4,7 +4,6 @@ import { Link, Redirect } from '@reach/router'
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
 import LockIcon from '@material-ui/icons/Lock'
 import LockOpenIcon from '@material-ui/icons/LockOpen'
 
@@ -19,11 +18,12 @@ import ErrorModal, { buildErrorProps } from 'components/ErrorModal'
 import Header from 'components/Header'
 import Spinner from 'components/Spinner'
 import KeyPressListener from 'components/KeyPressListener'
+import Button from 'components/Button'
 
 import './styles.css'
 
 class List extends PureComponent {
-  state = { gameName: '', gameType: gameNames.CAH, password: '' }
+  state = { gameName: '', gameType: '', password: '' }
 
   componentDidMount() {
     const { fetchGames } = this.props
@@ -110,7 +110,7 @@ class List extends PureComponent {
             value={gameType}
             label="Game Type"
             onChange={this.handleTypeChange}
-            options={[{ value: gameNames.CAH, display: 'Cards Against Humanity' }]}
+            options={[gameNames.CAH, gameNames.CODENAMES]}
           />
           <div>
             <Button

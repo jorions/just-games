@@ -49,7 +49,7 @@ a {
 .flex {
   display: flex;
 }
-.flex-centered {
+div.flex-centered {
   display: flex;
   justify-content: space-around;
   align-items: center;

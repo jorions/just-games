@@ -9,6 +9,7 @@ import App from './App'
 
 const styleMap = {
   [gameNames.CAH]: styles.cah,
+  [gameNames.CODENAMES]: styles.codenames,
 }
 
 const mapStateToProps = ({

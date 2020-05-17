@@ -1,0 +1,206 @@
+:root {
+  --codenames-status-height: 52px;
+}
+
+.status {
+  background-color: var(--purple);
+  color: white;
+  text-align: center;
+  padding: 10px;
+  transition: background-color var(--fast);
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  line-height: 1.334;
+  min-height: var(--codenames-status-height);
+}
+.status.ready {
+  background-color: var(--green);
+  padding: 6px;
+}
+.status.thinPadding {
+  padding: 6px;
+}
+
+.selectTeam {
+  width: 70vw;
+  max-width: 400px;
+}
+.selectTeam > div {
+  width: 50%;
+  display: inline-block;
+  vertical-align: top;
+  padding-left: .5rem;
+  padding-right: .5rem;
+  text-align: center;
+}
+
+.mainContainer {
+  height: calc(100% - var(--codenames-status-height));
+}
+
+.board {
+  display: grid;
+  /* 5 cols, 1.5rem between cols (1.5) and 5px padding around board (10/2) */
+  grid-template-columns: repeat(5, calc(20% - 1rem - 5px));
+  width: 100%;
+  max-width: 60rem;
+  padding-bottom: 1rem;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 10px;
+  grid-column-gap: 1.5rem;
+  grid-row-gap: 1.5rem;
+  justify-items: center;
+}
+@media (max-width: 1024px) {
+  .board {
+    padding: 5px;
+    /* 4 cols, 10px between cols (10/3) and 5px padding around board (10/2) */
+    grid-template-columns: repeat(4, calc(25% - 3.333px - 5px));
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+  }
+}
+@media (max-width: 700px) {
+  .board {
+    /* 3 cols, 10px between cols (5/3) (10/3 doesn't work) and 5px padding around board (10/2) */
+    grid-template-columns: repeat(3, calc(33.333% - 1.666px - 5px));
+  }
+}
+@media (max-width: 500px) {
+  .board {
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+  }
+  .board {
+    /* 3 cols, 5px between cols (5/3) */
+    grid-template-columns: repeat(3, calc(33.333% - 1.666px - 1.666px));
+  }
+}
+
+.hint {
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+  width: 220px;
+}
+@media (max-width: 480px) {
+  .hint {
+    width: 170px;
+  }
+}
+.cap {
+  width: 80px;
+}
+.hint > div,
+.cap > div {
+  font-size: 1.5rem;
+  color: black !important;
+  height: 36px !important;
+}
+.status:not(.ready) .cap > div,
+.status:not(.ready) .hint > div {
+  color: white !important;
+}
+
+.capInnerWrapper > div {
+  margin-bottom: 1px;
+}
+.capInnerWrapper > svg {
+  color: black !important;
+}
+.status:not(.ready) .capInnerWrapper > svg {
+  color: white !important;
+}
+
+.underline::before {
+  border-bottom: 2px solid black !important;
+}
+.status:not(.ready) .underline::before {
+  border-bottom: 2px solid white !important;
+}
+.underline::after {
+  border-bottom: 4px solid black !important;
+}
+.status:not(.ready) .underline::after {
+  border-bottom: 4px solid white !important;
+}
+
+.teams {
+  width: 100%;
+  max-width: 35rem;
+  margin: 10px auto;
+  padding: 0 .5rem;
+}
+.teams > div {
+  width: 50%;
+  display: inline-block;
+  vertical-align: top;
+}
+.teams > div:first-child {
+  padding-right: .5rem;
+}
+.teams > div:last-child {
+  padding-left: .5rem;
+}
+
+.team {
+  border-bottom: 1px solid black;
+}
+
+.activeTeam > h5 {
+  font-weight: 700 !important;
+}
+
+.teamPlayer > div {
+  display: inline-block;
+}
+.teamPlayer > div:first-child {
+  width: calc(100% - 86px);
+  text-align: left;
+}
+.teamPlayer > div:last-child {
+  width: 86px;
+  text-align: right;
+}
+
+.self {
+  font-weight: 700 !important;
+}
+
+.hintButton {
+  width: 106px;
+}
+/* breakpoint where button flows to next line */
+@media (max-width: 408px) {
+  .hintButton {
+    padding-top: 10px;
+  }
+}
+
+.hintShade {
+  min-height: 60px;
+  position: sticky;
+  bottom: 0;
+  padding-top: 15px;
+  z-index: 99;
+  background-color: var(--green);
+}
+.hintShade > * {
+  margin-bottom: 4px;
+}
+.hintShade > h5 {
+  display: inline-block;
+}
+.hintShade > button {
+  display: inline-block;
+  margin-top: -4px;
+  width: 115px;
+}
+.hintShade > button > span {
+  margin-top: 2px;
+}
+.hintShadeSpinner {
+  width: 115px;
+  margin-top: 1px;
+}

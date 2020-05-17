@@ -2,13 +2,13 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import MCard from '@material-ui/core/Card'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
 
 import { gameNames, games } from 'shared/games'
 import style from 'lib/style'
 import addOrRemoveFromArr from 'lib/addOrRemoveFromArr'
 
 import Spinner from 'components/Spinner'
+import Button from 'components/Button'
 import Card from './Card'
 
 import './styles.css'
@@ -267,7 +267,7 @@ class CAH extends PureComponent {
   }
 
   render() {
-    const { name, prompt, playedCardsThisRound, yourCards, players, remainingSwaps } = this.props
+    const { prompt, playedCardsThisRound, yourCards, players, remainingSwaps } = this.props
     const { selected, winner, toSwap, isSwapping } = this.state
 
     let blackCardFont = 'h5'
@@ -276,7 +276,6 @@ class CAH extends PureComponent {
 
     return (
       <div>
-        <Typography variant="h2">{name}</Typography>
         <div
           styleName={style({
             status: true,
@@ -357,7 +356,6 @@ CAH.propTypes = {
     data: PropTypes.string,
   }).isRequired,
   czar: PropTypes.string.isRequired,
-  name: PropTypes.string,
   prompt: promptProp.isRequired,
   playedCardsThisRound: PropTypes.arrayOf(
     PropTypes.oneOfType([
@@ -384,10 +382,6 @@ CAH.propTypes = {
   isCzar: PropTypes.bool.isRequired,
   submitActionLoading: PropTypes.bool.isRequired,
   submitAction: PropTypes.func.isRequired,
-}
-
-CAH.defaultProps = {
-  name: null,
 }
 
 export default CAH

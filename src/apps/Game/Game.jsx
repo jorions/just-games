@@ -15,6 +15,7 @@ import Header from 'components/Header'
 import PasswordInput from 'components/PasswordInput'
 
 import CAH from './CAH'
+import Codenames from './Codenames'
 
 import styles from './styles.css'
 
@@ -28,12 +29,20 @@ class Game extends PureComponent {
 
   componentDidMount() {
     const { fetchGame } = this.props
+    window.addEventListener('beforeunload', this.resetOnUnload)
     fetchGame()
   }
 
   componentWillUnmount() {
     const { reset } = this.props
+    window.removeEventListener('beforeunload', this.resetOnUnload)
     reset()
+  }
+
+  resetOnUnload = e => {
+    const { reset } = this.props
+    reset() // Do this to trigger marking player inactive if they close the page
+    e.returnValue = '' // Chrome requires return value to be set
   }
 
   handlePasswordChange = ({ target: { value } }) => {
@@ -255,10 +264,12 @@ class Game extends PureComponent {
 
   renderGame() {
     const { type, submitAction } = this.props
-
     switch (type) {
       case gameNames.CAH:
         return <CAH submitAction={submitAction} />
+      case gameNames.CODENAMES: {
+        return <Codenames submitAction={submitAction} />
+      }
       default:
         return null
     }
@@ -310,6 +321,8 @@ class Game extends PureComponent {
 Game.propTypes = {
   type: PropTypes.string,
   name: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
+
   isOwner: PropTypes.bool.isRequired,
   fetchGameLoading: PropTypes.bool.isRequired,
   fetchGameError: PropTypes.bool.isRequired,
@@ -322,7 +335,7 @@ Game.propTypes = {
   pollingError: PropTypes.bool.isRequired,
   gameEnded: PropTypes.bool.isRequired,
   submitActionError: PropTypes.bool.isRequired,
-  className: PropTypes.string.isRequired,
+
   navigate: PropTypes.func.isRequired,
   fetchGame: PropTypes.func.isRequired,
   deleteGame: PropTypes.func.isRequired,

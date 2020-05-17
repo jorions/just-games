@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 
 import { shortStringCharLimit } from 'shared/validations'
@@ -9,6 +8,7 @@ import ErrorModal, { buildErrorProps } from 'components/ErrorModal'
 import TextInput from 'components/TextInput'
 import Spinner from 'components/Spinner'
 import KeyPressListener from 'components/KeyPressListener'
+import Button from 'components/Button'
 
 import './styles.css'
 
@@ -83,11 +83,9 @@ class LogIn extends PureComponent {
                   fullWidth
                   onChange={this.handleChange}
                 />
-                <div className="mv4 h4">
+                <div className="mv4 h4 center">
                   {logInLoading ? (
-                    <div className="w4 h4">
-                      <Spinner />
-                    </div>
+                    <Spinner />
                   ) : (
                     <Button
                       type="submit"

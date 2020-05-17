@@ -7,7 +7,7 @@ try {
   const mod = '__storage_test__'
   localStorage.setItem(mod, mod)
   localStorage.removeItem(mod)
-  localStorageEnabled = true
+  localStorageEnabled = !process.env.MULTI_USER
 } catch (e) {
   localStorageEnabled = false
 }

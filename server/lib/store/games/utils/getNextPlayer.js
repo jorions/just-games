@@ -9,7 +9,7 @@ const getActivePlayers = (players, teamFilter) => {
     : allActivePlayers
 }
 
-module.exports = (players, pastPlayers, teamFilter) => {
+module.exports = (players, pastPlayers = [], teamFilter) => {
   const activePlayers = getActivePlayers(players, teamFilter)
   const activePlayerCount = activePlayers.length
   const pastPlayerCount = pastPlayers.length

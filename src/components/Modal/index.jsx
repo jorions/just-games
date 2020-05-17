@@ -10,6 +10,8 @@ import {
   Slide,
 } from '@material-ui/core'
 
+import Spinner from 'components/Spinner'
+
 // When passed as the 'TransitionComponent' prop into <Dialog> it must be able to hold a ref,
 // but pure functional components are stateless and thus cannot hold a ref.
 // So instead it must be a class.
@@ -19,7 +21,17 @@ class Transition extends PureComponent {
   }
 }
 
-const Modal = ({ isOpen, title, content, buttons: _buttons, onClose: _onClose, onOKClick }) => {
+const Modal = ({
+  isOpen,
+  title,
+  content,
+  buttons: _buttons,
+  buttonWrapper,
+  showSpinnerOnLoading,
+  loading,
+  onClose: _onClose,
+  onOKClick,
+}) => {
   const buttons = onOKClick ? [..._buttons, { value: 'OK', onClick: onOKClick }] : _buttons
   const onClose = onOKClick || _onClose
 
@@ -41,22 +53,26 @@ const Modal = ({ isOpen, title, content, buttons: _buttons, onClose: _onClose, o
             content
           )}
         </DialogContent>
-        <DialogActions>
-          {buttons.map(
-            ({ component, props = {}, value, color = 'primary', className = '', onClick }) =>
-              component || (
-                <Button
-                  variant="text"
-                  color={color}
-                  key={value}
-                  value={value}
-                  className={className}
-                  onClick={onClick}
-                  {...props}
-                >
-                  {value}
-                </Button>
-              ),
+        <DialogActions classes={{ root: buttonWrapper || '' }}>
+          {showSpinnerOnLoading && (loading || buttons.some(b => b.loading)) ? (
+            <Spinner size={40} />
+          ) : (
+            buttons.map(
+              ({ component, props = {}, value, color = 'primary', className = '', onClick }) =>
+                component || (
+                  <Button
+                    variant="text"
+                    color={color}
+                    key={value}
+                    value={value}
+                    className={className}
+                    onClick={onClick}
+                    {...props}
+                  >
+                    {value}
+                  </Button>
+                ),
+            )
           )}
         </DialogActions>
       </Dialog>
@@ -77,6 +93,9 @@ Modal.propTypes = {
       onClick: PropTypes.func,
     }),
   ),
+  buttonWrapper: PropTypes.string,
+  showSpinnerOnLoading: PropTypes.bool,
+  loading: PropTypes.bool,
   onOKClick: PropTypes.func,
   onClose: PropTypes.func,
 }
@@ -84,6 +103,9 @@ Modal.propTypes = {
 Modal.defaultProps = {
   content: null,
   buttons: [],
+  buttonWrapper: '',
+  showSpinnerOnLoading: false,
+  loading: false,
   onOKClick: null,
   onClose: null,
 }
