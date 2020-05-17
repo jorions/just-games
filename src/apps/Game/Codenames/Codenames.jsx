@@ -281,7 +281,7 @@ class Codenames extends PureComponent {
         else if (status.data.pickedWrongTeam) text = 'Nice! They picked one of your cards!'
         else if (color === BLACK) text = 'BAM! They picked the black card - you win!'
       }
-    } else if (status === WINNER) {
+    } else if (status.key === WINNER) {
       text = playerTeamIsPlaying ? 'You won!!!' : 'You lost - better luck next time!'
     }
 
