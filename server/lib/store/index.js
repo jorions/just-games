@@ -16,7 +16,7 @@ const INVALID_ACTION = 'invalidAction'
 
 const MAX_TIME_BEFORE_INACTIVE_IN_MS = 1000 * 60 * 2 // 2m
 const MAX_TIME_BEFORE_DELETE_IN_MS = 1000 * 60 * 60 * 24 // 1d
-const MAX_TIME_BEFORE_DELETE_GAME_IN_MS = 1000 * 60 * 20 // 20m
+const MAX_TIME_BEFORE_DELETE_GAME_IN_MS = 1000 * 60 * 2 // 2m
 
 const store = {
   gamesLastUpdated: Date.now(),
