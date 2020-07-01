@@ -274,15 +274,15 @@ class Codenames extends PureComponent {
         if (status.data.pickedRightTeam) text = `Hooray! ${you(true)} got it!`
         else if (status.data.pickedWrongTeam)
           text = `Uh oh! ${you(true)} picked a ${otherTeam} card!`
-        else if (color === BLACK) text = `WOMP! ${you(true)} picked the black card - you lose!`
+        else if (color === BLACK) text = `WOMP! ${you(true)} picked the black card!`
       } else {
         text = `Lucky you - the ${otherTeam} team picked a tan card`
         if (status.data.pickedRightTeam) text = `Watch out! They found a ${otherTeam} card!`
         else if (status.data.pickedWrongTeam) text = 'Nice! They picked one of your cards!'
-        else if (color === BLACK) text = 'BAM! They picked the black card - you win!'
+        else if (color === BLACK) text = 'BAM! They picked the black card!'
       }
     } else if (status.key === WINNER) {
-      text = playerTeamIsPlaying ? 'You won!!!' : 'You lost - better luck next time!'
+      text = status.data === playerTeam ? 'You won!!!' : 'You lost - better luck next time!'
     }
 
     return (
