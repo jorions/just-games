@@ -311,8 +311,7 @@ class Codenames extends PureComponent {
         return playing && status.key === GIVING_HINT ? 'Giving hint' : 'Spymaster'
     }
 
-    const renderPlayer = p => {
-      const text = statusText(p)
+    const renderPlayer = ({ text, p }) => {
       const className = style({
         red: p === spymaster && color === RED,
         blue: p === spymaster && color === BLUE,
@@ -355,7 +354,10 @@ class Codenames extends PureComponent {
             {score}
           </Typography>
         </div>
-        {teamPlayers.map(renderPlayer)}
+        {teamPlayers
+          .map(p => ({ text: statusText(p), p }))
+          .sort(({ text }) => (text === INACTIVE_TEXT ? 1 : -1))
+          .map(renderPlayer)}
       </div>
     )
   }
