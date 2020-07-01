@@ -401,7 +401,7 @@ class CODENAMES {
       board: board.map((row, y) =>
         row.map((card, x) => ({ ...card, color: card.hidden ? null : spyLayout[y][x] })),
       ),
-      spyLayout: isSpymaster ? spyLayout : null,
+      spyLayout: isSpymaster || status.key === WINNER ? spyLayout : null,
       players,
     }
   }
