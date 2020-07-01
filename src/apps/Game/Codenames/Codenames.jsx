@@ -391,7 +391,7 @@ class Codenames extends PureComponent {
                   text={text}
                   hidden={hidden}
                   color={spyLayout ? spyLayout[y][x] : color}
-                  isSpymaster={!!spyLayout}
+                  showOutline={!!spyLayout}
                   selected={!!(vote && vote.x === x && vote.y === y)}
                   canSelect={
                     hidden &&

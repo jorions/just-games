@@ -31,7 +31,7 @@ const Card = ({
   text,
   color,
   hidden,
-  isSpymaster,
+  showOutline,
   selected,
   canSelect,
   voted,
@@ -42,7 +42,7 @@ const Card = ({
   <MCard
     styleName={style({
       card: true,
-      outline: isSpymaster,
+      outline: showOutline,
       fill: !hidden,
       [colorMap[color]]: color,
       voted,
@@ -87,7 +87,7 @@ Card.propTypes = {
   text: PropTypes.string.isRequired,
   color: PropTypes.string, // RED, BLUE, BLACK, TAN, null
   hidden: PropTypes.bool.isRequired,
-  isSpymaster: PropTypes.bool.isRequired,
+  showOutline: PropTypes.bool.isRequired,
   selected: PropTypes.bool.isRequired,
   canSelect: PropTypes.bool.isRequired,
   voted: PropTypes.bool.isRequired,
