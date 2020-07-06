@@ -239,9 +239,10 @@ class Codenames extends PureComponent {
           text = `Waiting for ${playerTeamData.spymaster}'s hint`
         }
       } else {
-        text = `${playerTeam === RED ? blue.spymaster : red.spymaster} is giving the ${
-          oppositeTeam[playerTeam]
-        } team a hint`
+        const spymaster = playerTeam === RED ? blue.spymaster : red.spymaster
+        text = spymaster
+          ? `${spymaster} is giving the ${oppositeTeam[playerTeam]} team a hint`
+          : `Someone must join the ${oppositeTeam[playerTeam]} team to continue`
       }
     } else if (status.key === VOTING) {
       if (teamIsVoting) {

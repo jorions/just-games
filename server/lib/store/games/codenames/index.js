@@ -295,11 +295,38 @@ class CODENAMES {
     if (mustBeSpymaster && spymaster !== username) throw new Error('notSpymaster')
   }
 
+  // When the player just became the only active member on their team, and their
+  // team was supposed to be playing, the game had been in a logic hole waiting for
+  // someone on the empty team to give a hint. So move to the next board.
+  moveRoundIfGameFellInHole(pickedTeamOrWasInactive, username) {
+    // If the status is WINNER, then the round will move on after setTimeout automatically
+    if (!pickedTeamOrWasInactive || this.status.key === STARTING || this.status.key === WINNER)
+      return
+
+    const playerTeam = this.players[username].team
+    let teamIsPlaying = false
+    if (playerTeam === RED && this.red.playing) teamIsPlaying = true
+    else if (playerTeam === BLUE && this.blue.playing) teamIsPlaying = true
+
+    const isOnlyActivePlayerOnPlayingTeam =
+      teamIsPlaying &&
+      Object.values(corePlayerInfo.getActivePlayers(this.players)).filter(
+        ({ team }) => team === playerTeam,
+      ).length === 1
+
+    if (isOnlyActivePlayerOnPlayingTeam) {
+      // If the status is VOTED there is a setTimeout for moving to GIVING_HINT
+      if (this.status.key === VOTED) clearTimeout(this.moveToNextHintTimeout)
+      this.moveToNextBoard()
+    }
+  }
+
   /* ---------------------------- Player actions ---------------------------- */
 
   chooseTeam(username, team) {
     if (this.players[username].team) throw new Error('alreadyOnTeam')
     this.players[username].team = team
+    this.moveRoundIfGameFellInHole(true, username)
   }
 
   startGame(username) {
@@ -334,6 +361,7 @@ class CODENAMES {
     if (this.status.key !== VOTING) throw new Error('mustBeVoting')
     this.moveToNextHint()
   }
+
   // /*
   // ==============================================================================
   // ============================== PUBLIC METHODS ================================
@@ -343,10 +371,12 @@ class CODENAMES {
   addOrRefreshPlayer = username => {
     const currentPlayer = this.players[username]
     if (currentPlayer) {
+      const wasInactive = !currentPlayer.isActive
       this.players[username] = {
         ...currentPlayer,
         ...corePlayerInfo.refresh(),
       }
+      this.moveRoundIfGameFellInHole(wasInactive, username)
     } else {
       this.players[username] = {
         team: null,
