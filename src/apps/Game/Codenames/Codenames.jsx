@@ -384,6 +384,7 @@ class Codenames extends PureComponent {
       spyLayout,
       playerVote,
       playerTeamIsPlaying,
+      playerTeam,
       submitActionLoading,
     } = this.props
     const { vote, endingRound } = this.state
@@ -396,7 +397,7 @@ class Codenames extends PureComponent {
           status.data.pickedRightTeam &&
           status.data.cap >= status.data.count))
     return (
-      <div>
+      <div styleName="container">
         {this.renderSelectTeamModal()}
         {this.renderStatus()}
         <div className="flex-centered" styleName="mainContainer">
@@ -441,7 +442,14 @@ class Codenames extends PureComponent {
           </div>
         </div>
         {hint && (
-          <div styleName="hintShade" className="center">
+          <div
+            styleName={style({
+              hintShade: true,
+              red: !playerTeamIsPlaying && playerTeam === BLUE,
+              blue: !playerTeamIsPlaying && playerTeam === RED,
+            })}
+            className="center"
+          >
             <Typography variant="h5">
               {hint}
               <span className="ml3 mr3">|</span>

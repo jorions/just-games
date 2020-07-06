@@ -2,6 +2,12 @@
   --codenames-status-height: 52px;
 }
 
+@media (min-height: 955px) {
+  .container {
+    height: 100vh;
+  }
+}
+
 .status {
   background-color: var(--purple);
   color: white;
@@ -185,6 +191,12 @@
   padding-top: 15px;
   z-index: 99;
   background-color: var(--green);
+}
+.hintShade.red {
+  background-color: var(--red);
+}
+.hintShade.blue {
+  background-color: var(--blue);
 }
 .hintShade > * {
   margin-bottom: 4px;
