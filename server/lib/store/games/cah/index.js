@@ -100,7 +100,12 @@ class CAH {
     this.pickNextCzar()
   }
 
-  handlePlayerDrop(username) {
+  handlePlayerDrop(username, changeOwnerInStore) {
+    if (username === this.owner) {
+      this.owner = getNextPlayer(this.players)
+      changeOwnerInStore(this.owner)
+    }
+
     // If the player is the czar skip the round and move on
     if (username === this.czar) {
       // If the status is WINNER, then the round will move on after setTimeout automatically
@@ -219,17 +224,17 @@ class CAH {
     }
   }
 
-  markPlayerInactive = username => {
+  markPlayerInactive = (username, changeOwnerInStore) => {
     this.players[username] = {
       ...this.players[username],
       ...corePlayerInfo.inactive(),
     }
-    this.handlePlayerDrop(username)
+    this.handlePlayerDrop(username, changeOwnerInStore)
   }
 
-  removePlayer = username => {
+  removePlayer = (username, changeOwnerInStore) => {
     delete this.players[username]
-    this.handlePlayerDrop(username)
+    this.handlePlayerDrop(username, changeOwnerInStore)
   }
 
   submitAction = ({ username, action, data }) => {

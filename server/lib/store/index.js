@@ -283,6 +283,10 @@ const deleteGame = (id, username) => {
   updateGamesList()
 }
 
+const changeOwner = gameId => newOwner => {
+  store.games[gameId].owner = newOwner
+}
+
 const submitAction = ({ id, username, action, data }) => {
   const game = store.games[id]
   if (!game) throw new ValidationError('Game not found', GAME_NOT_FOUND)
@@ -307,7 +311,7 @@ const markPlayerInactive = (id, username) => {
   if (!game) throw new ValidationError('Game not found', GAME_NOT_FOUND)
 
   if (game.players[username]) {
-    game.markPlayerInactive(username)
+    game.markPlayerInactive(username, changeOwner(id))
     updateGame(game)
   }
 }
@@ -317,7 +321,7 @@ const removeUser = (username, gameId) => {
   if (gameId) {
     const game = store.games[gameId]
     if (!game) throw new ValidationError('Game not found', GAME_NOT_FOUND)
-    game.removePlayer(username)
+    game.removePlayer(username, changeOwner(gameId))
     updateGame(game)
   }
 }

@@ -268,11 +268,13 @@ class CODENAMES {
     this.moveToNextHintTimeout = null
   }
 
-  handlePlayerDrop(username) {
+  handlePlayerDrop(username, changeOwnerInStore) {
     // Transfer ownership
     if (username === this.owner) {
       this.owner = getNextPlayer(this.players)
+      changeOwnerInStore(this.owner)
     }
+
     // If the player is the spymaster skip the round and move on
     if (username === this.red.spymaster || username === this.blue.spymaster) {
       // If the status is WINNER, then the round will move on after setTimeout automatically
@@ -393,17 +395,17 @@ class CODENAMES {
     }
   }
 
-  markPlayerInactive = username => {
+  markPlayerInactive = (username, changeOwnerInStore) => {
     this.players[username] = {
       ...this.players[username],
       ...corePlayerInfo.inactive(),
     }
-    this.handlePlayerDrop(username)
+    this.handlePlayerDrop(username, changeOwnerInStore)
   }
 
-  removePlayer = username => {
+  removePlayer = (username, changeOwnerInStore) => {
     delete this.players[username]
-    this.handlePlayerDrop(username)
+    this.handlePlayerDrop(username, changeOwnerInStore)
   }
 
   submitAction = ({ username, action, data }) => {
