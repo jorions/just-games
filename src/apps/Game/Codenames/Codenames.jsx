@@ -80,25 +80,40 @@ class Codenames extends PureComponent {
   }
 
   renderSelectTeamModal() {
-    const { playerTeam, red, blue, submitActionLoading } = this.props
-    const noPlayers = (
-      <div className="center pt2 pb2">
-        <Typography variant="subtitle2">Team is empty</Typography>
-      </div>
-    )
+    const { playerTeam, red, blue, players, submitActionLoading } = this.props
+
+    const playerMap = {}
+    players.forEach(p => {
+      playerMap[p.username] = p
+    })
+
+    const team = t =>
+      t.players.length ? (
+        t.players
+          .sort(p => (playerMap[p].isActive ? -1 : 1))
+          .map(p => (
+            <Typography
+              key={`importantInfo_team_${p}`}
+              className={playerMap[p].isActive ? '' : 'med-gray'}
+            >
+              {p}
+            </Typography>
+          ))
+      ) : (
+        <div className="center pt2 pb2">
+          <Typography variant="subtitle2">Team is empty</Typography>
+        </div>
+      )
+
     const teams = (
       <div styleName="selectTeam">
         <div>
           <div className="red center pb1">Red Team</div>
-          {red.players.length
-            ? red.players.map(p => <Typography key={`importantInfo_team_${p}`}>{p}</Typography>)
-            : noPlayers}
+          {team(red)}
         </div>
         <div>
           <div className="blue center pb1">Blue Team</div>
-          {blue.players.length
-            ? blue.players.map(p => <Typography key={`importantInfo_team_${p}`}>{p}</Typography>)
-            : noPlayers}
+          {team(blue)}
         </div>
       </div>
     )
