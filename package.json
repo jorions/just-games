@@ -71,7 +71,7 @@
     "dotenv": "^8.1.0",
     "effectsloop-server-utils": "^1.6.0",
     "history": "^4.10.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
